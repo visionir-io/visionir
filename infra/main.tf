@@ -14,12 +14,15 @@ provider "cloudflare" {
 }
 
 provider "oci" {
-  tenancy_ocid        = var.oci_tenancy_ocid
+  tenancy_ocid        = var.oci_tenancy_id
   config_file_profile = var.config_file_profile
 }
+
 
 resource "cloudflare_r2_bucket" "visionir-bucket" {
   account_id = var.cloudflare_account_id
   name       = "visionir"
   location   = "WEUR"
 }
+
+

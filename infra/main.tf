@@ -24,5 +24,3 @@ resource "cloudflare_r2_bucket" "visionir-bucket" {
   name       = "visionir"
   location   = "WEUR"
 }
-
-

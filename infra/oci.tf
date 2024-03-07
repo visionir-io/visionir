@@ -49,6 +49,12 @@ resource "oci_core_security_list" "visioniro" {
       max = 22
     }
   }
+  egress_security_rules {
+    protocol    = "6" # TCP protocol
+    destination = "0.0.0.0/0"
+    stateless   = false
+  }
+
 }
 
 resource "oci_core_network_security_group" "visioniro" {
@@ -67,6 +73,21 @@ resource "oci_core_network_security_group_security_rule" "tcp_ssh_inbound" {
     destination_port_range {
       min = 22
       max = 22
+    }
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "https_outbound" {
+  network_security_group_id = oci_core_network_security_group.visioniro.id
+  direction                 = "EGRESS"
+  protocol                  = "6"
+  destination               = "0.0.0.0/0"
+  stateless                 = false
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      min = 443
+      max = 443
     }
   }
 }

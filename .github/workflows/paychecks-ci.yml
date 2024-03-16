@@ -13,6 +13,8 @@ jobs:
   handle-docker-image:
     runs-on: ubuntu-latest
     steps:
+      - name: echo workspace
+        run: echo $GITHUB_WORKSPACE
       - uses: actions/checkout@v4
         with:
           path: "apps/paychecks"

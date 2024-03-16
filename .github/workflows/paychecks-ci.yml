@@ -1,4 +1,4 @@
-name: ci-pipeline
+name: paychecks-ci-pipeline
 run-name: Build, Tag and Push new image to Docker Hub
 on:
   push:

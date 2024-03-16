@@ -105,3 +105,10 @@ module "compute-instance" {
   primary_vnic_nsg_ids       = [oci_core_network_security_group.visioniro.id]
   shape                      = "VM.Standard.A1.Flex" #
 }
+
+output "compute-ip-address" {
+  value       = module.compute-instance.public_ip
+  description = "value of the public ip address of the compute instance"
+
+
+}

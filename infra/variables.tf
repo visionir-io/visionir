@@ -1,4 +1,4 @@
-variable "cloudflare_r2_api_key" {
+variable "cloudflare_api_key" {
   description = "The API key for the Cloudflare R2 storage"
   type        = string
 }
@@ -31,6 +31,22 @@ variable "oci_ubuntu_image_id" {
 
 variable "oci_ssh_key_path" {
   description = "The path to the SSH public key"
+  type        = string
+
+}
+
+variable "cloudflare_zone_id" {
+  description = "The zone ID for Cloudflare"
+  type        = string
+}
+
+variable "visionir_domain" {
+  description = "The domain name for visionir"
+  type        = string
+
+}
+variable "visionir_email" {
+  description = "The email name for visionir"
   type        = string
 
 }

@@ -7,6 +7,7 @@ on:
     paths:
       - "apps/paychecks/Dockerfile"
       - "apps/paychecks/app/**"
+      - ".github/workflows/paychecks-ci.yml"
 
 jobs:
   handle-docker-image:
@@ -42,5 +43,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USER }}/${{inputs.IMAGE_NAME}}:${{ steps.date.outputs.TAG_DATE }}.${{ github.run_number }} 
-            ${{ secrets.DOCKER_USER }}/${{inputs.IMAGE_NAME}}:latest
+            ${{ secrets.DOCKER_USER }}/paychecks:${{ steps.date.outputs.TAG_DATE }}.${{ github.run_number }} 
+            ${{ secrets.DOCKER_USER }}/paychecks:latest

@@ -29,8 +29,13 @@ variable "oci_ubuntu_image_id" {
   type        = string
 }
 
+variable "oci_ssh_key" {
+  description = "The SSH public key"
+  type        = string
+
+}
 variable "oci_ssh_key_path" {
-  description = "The path to the SSH public key"
+  description = "The SSH public key path"
   type        = string
 
 }
@@ -47,6 +52,11 @@ variable "visionir_domain" {
 }
 variable "visionir_email" {
   description = "The email name for visionir"
+  type        = string
+
+}
+variable "home_absolute_path" {
+  description = "Absolute path to the home directory"
   type        = string
 
 }

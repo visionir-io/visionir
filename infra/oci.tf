@@ -100,15 +100,13 @@ module "compute-instance" {
   source_ocid                = var.oci_ubuntu_image_id
   assign_public_ip           = true
   block_storage_sizes_in_gbs = [50]
-  ssh_public_keys            = var.oci_ssh_key_path
+  ssh_public_keys            = var.oci_ssh_key
   subnet_ocids               = [oci_core_subnet.visioniro.id]
   primary_vnic_nsg_ids       = [oci_core_network_security_group.visioniro.id]
-  shape                      = "VM.Standard.A1.Flex" #
+  shape                      = "VM.Standard.A1.Flex" #tfp
 }
 
 output "compute-ip-address" {
   value       = module.compute-instance.public_ip
   description = "value of the public ip address of the compute instance"
-
-
 }

@@ -1,0 +1,35 @@
+{
+  "dockerComposeFile": "../compose.yaml",
+  "service": "paychecks",
+  "workspaceFolder": "/paychecks",
+  "postCreateCommand": "poetry shell",
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8501],
+  "portsAttributes": {
+    "8501": {
+      "label": "streamlit app for paychecks",
+      "onAutoForward": "openBrowserOnce",
+      "requireLocalPort": true
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installOhMyZsh": "true"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff"
+      ],
+      "settings": {
+        "ruff.enable": true,
+        "ruff.lint.enable": true,
+        "ruff.organizeImports": true
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+services:
+  paychecks:
+    image: paychecks
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/paychecks/src

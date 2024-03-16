@@ -44,7 +44,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           file: Dockerfile
-          context: apps/paychecks/
+          context: .
           push: true
           tags: |
             ${{ secrets.DOCKER_USER }}/paychecks:${{ steps.date.outputs.TAG_DATE }}.${{ github.run_number }} 

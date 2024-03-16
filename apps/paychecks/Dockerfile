@@ -1,13 +1,18 @@
 FROM python:bullseye
 
-WORKDIR /paychecks
-
 RUN  curl -sSL https://install.python-poetry.org | python3 -
-
-COPY pyproject.toml poetry.lock ./
 
 ENV PATH="${PATH}:/root/.local/bin"
 
-RUN poetry install
+WORKDIR /paychecks/app
 
-CMD [ "poetry", "run", "streamlit", "run", "src/main.py" ]
+COPY app/project ./project
+
+RUN poetry install -C project/
+
+COPY app/src ./src
+
+WORKDIR /paychecks/app/project
+
+CMD [ "poetry", "run", "streamlit", "run", "../src/main.py" ]
+# CMD [ "sleep", "infinity"]

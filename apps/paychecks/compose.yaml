@@ -5,4 +5,4 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/paychecks/src
+      - ./app:/paychecks/app

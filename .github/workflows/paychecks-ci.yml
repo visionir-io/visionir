@@ -13,6 +13,9 @@ jobs:
   handle-docker-image:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          path: "apps/paychecks"
       - name: Generate Date
         id: date
         run: echo "TAG_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"

@@ -15,4 +15,3 @@ COPY app/src ./src
 WORKDIR /paychecks/app/project
 
 CMD [ "poetry", "run", "streamlit", "run", "../src/main.py" ]
-# CMD [ "sleep", "infinity"]

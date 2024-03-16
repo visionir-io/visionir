@@ -1,8 +1,8 @@
 {
   "dockerComposeFile": "../compose.yaml",
   "service": "paychecks",
-  "workspaceFolder": "/paychecks",
-  "postCreateCommand": "poetry shell",
+  "workspaceFolder": "/paychecks/app",
+  "postCreateCommand": "cd project && poetry shell",
   "shutdownAction": "stopCompose",
   "forwardPorts": [8501],
   "portsAttributes": {
@@ -28,7 +28,21 @@
       "settings": {
         "ruff.enable": true,
         "ruff.lint.enable": true,
-        "ruff.organizeImports": true
+        "ruff.organizeImports": true,
+        "launch": {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "name": "Python Debugger: Current File",
+              "type": "debugpy",
+              "request": "launch",
+              "program": "${file}",
+              "console": "integratedTerminal",
+              "justMyCode": false
+            }
+          ],
+          "compounds": []
+        }
       }
     }
   }

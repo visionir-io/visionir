@@ -7,13 +7,14 @@ on:
     paths:
       - "apps/paychecks/Dockerfile"
       - "apps/paychecks/app/**"
-      - ".github/workflows/paychecks-ci.yml"
 
 jobs:
   handle-docker-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Image Directory
+        id: checkout
+        uses: actions/checkout@v4
         with:
           sparse-checkout: |
             apps/paychecks

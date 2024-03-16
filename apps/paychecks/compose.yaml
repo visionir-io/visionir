@@ -1,8 +1,5 @@
 services:
   paychecks:
-    image: paychecks
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: docker.io/visionir/paychecks:latest
     volumes:
       - ./app:/paychecks/app

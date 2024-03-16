@@ -13,11 +13,10 @@ jobs:
   handle-docker-image:
     runs-on: ubuntu-latest
     steps:
-      - name: echo workspace
-        run: echo $GITHUB_WORKSPACE
       - uses: actions/checkout@v4
         with:
-          path: "apps/paychecks"
+          sparse-checkout: |
+            apps/paychecks
       - name: Generate Date
         id: date
         run: echo "TAG_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
@@ -45,8 +44,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms: linux/amd64,linux/arm64
-          file: Dockerfile
-          context: .
+          file: apps/paychecks/Dockerfile
+          context: apps/paychecks
           push: true
           tags: |
             ${{ secrets.DOCKER_USER }}/paychecks:${{ steps.date.outputs.TAG_DATE }}.${{ github.run_number }} 

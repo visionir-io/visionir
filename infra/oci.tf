@@ -9,8 +9,6 @@ resource "oci_core_subnet" "visioniro" {
   vcn_id            = module.vcn.vcn_id
   security_list_ids = [oci_core_security_list.visioniro.id]
   route_table_id    = oci_core_route_table.visioniro.id
-
-
 }
 
 resource "oci_core_nat_gateway" "visioniro" {
@@ -41,7 +39,7 @@ resource "oci_core_security_list" "visioniro" {
 
   ingress_security_rules {
     protocol  = "6"
-    source    = "0.0.0.0/0"
+    source    = var.home_public_ip
     stateless = false
 
     tcp_options {
@@ -49,10 +47,44 @@ resource "oci_core_security_list" "visioniro" {
       max = 22
     }
   }
+
+}
+
+resource "oci_core_security_list" "visioniro" {
+  compartment_id = var.oci_tenancy_id
+  vcn_id         = module.vcn.vcn_id
+  for_each       = toset(data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks)
+
+  ingress_security_rules {
+    protocol  = "6"
+    source    = each.value
+    stateless = false
+
+    tcp_options {
+      min = 80
+      max = 80
+    }
+  }
+  ingress_security_rules {
+    protocol  = "6"
+    source    = each.value
+    stateless = false
+
+    tcp_options {
+      min = 443
+      max = 443
+    }
+  }
+
   egress_security_rules {
     protocol    = "6" # TCP protocol
     destination = "0.0.0.0/0"
     stateless   = false
+
+    tcp_options {
+      min = 443
+      max = 443
+    }
   }
 
 }
@@ -73,6 +105,21 @@ resource "oci_core_network_security_group_security_rule" "tcp_ssh_inbound" {
     destination_port_range {
       min = 22
       max = 22
+    }
+  }
+}
+resource "oci_core_network_security_group_security_rule" "tcp_http_inbound" {
+  network_security_group_id = oci_core_network_security_group.visioniro.id
+  for_each                  = toset(data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks)
+  direction                 = "INGRESS"
+  protocol                  = "6"
+  source                    = each.value
+  stateless                 = false
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      min = 80
+      max = 80
     }
   }
 }
@@ -107,6 +154,6 @@ module "compute-instance" {
 }
 
 output "compute-ip-address" {
-  value       = module.compute-instance.public_ip
+  value       = module.compute-instance.public_ip[0]
   description = "value of the public ip address of the compute instance"
 }

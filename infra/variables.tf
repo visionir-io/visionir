@@ -60,3 +60,9 @@ variable "home_absolute_path" {
   type        = string
 
 }
+
+variable "home_public_ip" {
+  description = "Absolute path to the home directory"
+  type        = string
+}
+

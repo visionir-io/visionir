@@ -3,6 +3,13 @@ module "vcn" {
   compartment_id = var.oci_tenancy_id
 }
 
+resource "oci_core_subnet" "visioniro" {
+  cidr_block     = var.subnet_cidr_block
+  compartment_id = var.oci_tenancy_id
+  vcn_id         = module.vcn.vcn_id
+  route_table_id = oci_core_route_table.visioniro.id
+  depends_on     = [oci_core_route_table.visioniro]
+}
 resource "oci_core_nat_gateway" "visioniro" {
   compartment_id = var.oci_tenancy_id
   vcn_id         = module.vcn.vcn_id
@@ -23,16 +30,8 @@ resource "oci_core_route_table" "visioniro" {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
   }
-  depends_on = [oci_core_internet_gateway.visioniro]
 }
 
-resource "oci_core_subnet" "visioniro" {
-  # for_each       = toset(oci_core_security_list.cloudflare.id)
-  cidr_block     = var.subnet_cidr_block
-  compartment_id = var.oci_tenancy_id
-  vcn_id         = module.vcn.vcn_id
-  route_table_id = oci_core_route_table.visioniro.id
-}
 resource "oci_core_network_security_group" "visioniro" {
   compartment_id = var.oci_tenancy_id
   vcn_id         = module.vcn.vcn_id

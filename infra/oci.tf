@@ -3,18 +3,16 @@ module "vcn" {
   compartment_id = var.oci_tenancy_id
 }
 
-resource "oci_core_subnet" "visioniro" {
-  cidr_block        = var.subnet_cidr_block
-  compartment_id    = var.oci_tenancy_id
-  vcn_id            = module.vcn.vcn_id
-  security_list_ids = [oci_core_security_list.visioniro.id]
-  route_table_id    = oci_core_route_table.visioniro.id
-}
-
 resource "oci_core_nat_gateway" "visioniro" {
   compartment_id = var.oci_tenancy_id
   vcn_id         = module.vcn.vcn_id
   block_traffic  = false
+}
+
+resource "oci_core_internet_gateway" "visioniro" {
+  compartment_id = var.oci_tenancy_id
+  vcn_id         = module.vcn.vcn_id
+  enabled        = true
 }
 
 resource "oci_core_route_table" "visioniro" {
@@ -25,82 +23,29 @@ resource "oci_core_route_table" "visioniro" {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
   }
+  depends_on = [oci_core_internet_gateway.visioniro]
 }
 
-resource "oci_core_internet_gateway" "visioniro" {
+resource "oci_core_subnet" "visioniro" {
+  # for_each       = toset(oci_core_security_list.cloudflare.id)
+  cidr_block     = var.subnet_cidr_block
   compartment_id = var.oci_tenancy_id
   vcn_id         = module.vcn.vcn_id
-  enabled        = true
+  route_table_id = oci_core_route_table.visioniro.id
 }
-
-resource "oci_core_security_list" "visioniro" {
-  compartment_id = var.oci_tenancy_id
-  vcn_id         = module.vcn.vcn_id
-
-  ingress_security_rules {
-    protocol  = "6"
-    source    = var.home_public_ip
-    stateless = false
-
-    tcp_options {
-      min = 22
-      max = 22
-    }
-  }
-
-}
-
-resource "oci_core_security_list" "visioniro" {
-  compartment_id = var.oci_tenancy_id
-  vcn_id         = module.vcn.vcn_id
-  for_each       = toset(data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks)
-
-  ingress_security_rules {
-    protocol  = "6"
-    source    = each.value
-    stateless = false
-
-    tcp_options {
-      min = 80
-      max = 80
-    }
-  }
-  ingress_security_rules {
-    protocol  = "6"
-    source    = each.value
-    stateless = false
-
-    tcp_options {
-      min = 443
-      max = 443
-    }
-  }
-
-  egress_security_rules {
-    protocol    = "6" # TCP protocol
-    destination = "0.0.0.0/0"
-    stateless   = false
-
-    tcp_options {
-      min = 443
-      max = 443
-    }
-  }
-
-}
-
 resource "oci_core_network_security_group" "visioniro" {
   compartment_id = var.oci_tenancy_id
   vcn_id         = module.vcn.vcn_id
 }
 
-resource "oci_core_network_security_group_security_rule" "tcp_ssh_inbound" {
+resource "oci_core_network_security_group_security_rule" "ssh_inbound" {
   network_security_group_id = oci_core_network_security_group.visioniro.id
   direction                 = "INGRESS"
   protocol                  = "6"
-  source                    = "0.0.0.0/0"
+  source                    = var.home_public_ip
   stateless                 = false
   source_type               = "CIDR_BLOCK"
+
   tcp_options {
     destination_port_range {
       min = 22
@@ -108,9 +53,10 @@ resource "oci_core_network_security_group_security_rule" "tcp_ssh_inbound" {
     }
   }
 }
-resource "oci_core_network_security_group_security_rule" "tcp_http_inbound" {
-  network_security_group_id = oci_core_network_security_group.visioniro.id
+
+resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_https" {
   for_each                  = toset(data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks)
+  network_security_group_id = oci_core_network_security_group.visioniro.id
   direction                 = "INGRESS"
   protocol                  = "6"
   source                    = each.value
@@ -118,23 +64,25 @@ resource "oci_core_network_security_group_security_rule" "tcp_http_inbound" {
   source_type               = "CIDR_BLOCK"
   tcp_options {
     destination_port_range {
-      min = 80
-      max = 80
+      min = 443
+      max = 443
     }
   }
 }
 
-resource "oci_core_network_security_group_security_rule" "https_outbound" {
+resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_http" {
+  for_each                  = toset(data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks)
   network_security_group_id = oci_core_network_security_group.visioniro.id
-  direction                 = "EGRESS"
+  direction                 = "INGRESS"
   protocol                  = "6"
-  destination               = "0.0.0.0/0"
+  source                    = each.value
   stateless                 = false
   source_type               = "CIDR_BLOCK"
+
   tcp_options {
     destination_port_range {
-      min = 443
-      max = 443
+      min = 80
+      max = 80
     }
   }
 }
@@ -150,7 +98,7 @@ module "compute-instance" {
   ssh_public_keys            = var.oci_ssh_key
   subnet_ocids               = [oci_core_subnet.visioniro.id]
   primary_vnic_nsg_ids       = [oci_core_network_security_group.visioniro.id]
-  shape                      = "VM.Standard.A1.Flex" #tfp
+  shape                      = "VM.Standard.A1.Flex"
 }
 
 output "compute-ip-address" {

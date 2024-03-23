@@ -40,11 +40,6 @@ variable "oci_ssh_key_path" {
 
 }
 
-variable "cloudflare_zone_id" {
-  description = "The zone ID for Cloudflare"
-  type        = string
-}
-
 variable "visionir_domain" {
   description = "The domain name for visionir"
   type        = string

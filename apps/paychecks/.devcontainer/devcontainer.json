@@ -15,7 +15,8 @@
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installOhMyZsh": "true"
-    }
+    },
+    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
   },
   "customizations": {
     "vscode": {
@@ -23,12 +24,14 @@
         "ms-python.python",
         "ms-python.debugpy",
         "ms-python.vscode-pylance",
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "elagil.pre-commit-helper"
       ],
       "settings": {
         "ruff.enable": true,
         "ruff.lint.enable": true,
         "ruff.organizeImports": true,
+        "pre-commit-helper.config": "project/.pre-commit-config.yaml",
         "launch": {
           "version": "0.2.0",
           "configurations": [

@@ -3,3 +3,5 @@ services:
     image: docker.io/visionir/paychecks:latest
     volumes:
       - ./app:/paychecks/app
+    ports:
+      - 8501:8501

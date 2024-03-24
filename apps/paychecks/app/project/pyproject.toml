@@ -11,17 +11,18 @@ python = "~3.12"
 streamlit = "^1.32.2"
 ruff = "^0.3.3"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 89
+fix = true
 indent-width = 4
 target-version = "py312"
 extend-include = ["*.ipynb"]
+respect-gitignore = true
 
 [tool.ruff.format]
 line-ending = "auto"
-quote-style = "single"
+quote-style = "double"

@@ -5,7 +5,7 @@ resource "local_file" "ssh_config" {
   }
   content    = <<EOF
   Host oci-machine
-    HostName ${oci_core_instance.vizionir.public_ip}
+    HostName ${oci_core_instance.visionir.public_ip}
     User ubuntu
     Port 22
     IdentityFile ${var.oci_ssh_key_path}
@@ -13,5 +13,5 @@ resource "local_file" "ssh_config" {
     UseKeychain yes
     ServerAliveInterval 240
     EOF
-  depends_on = [oci_core_instance.vizionir]
+  depends_on = [oci_core_instance.visionir]
 }

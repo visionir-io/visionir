@@ -5,18 +5,17 @@
   "postCreateCommand": "cd project && poetry shell",
   "shutdownAction": "stopCompose",
   "forwardPorts": [8501],
-  "portsAttributes": {
-    "8501": {
-      "label": "streamlit app for paychecks",
-      "onAutoForward": "openBrowserOnce",
-      "requireLocalPort": true
+  "mounts": [
+    {
+      "source": "${localWorkspaceFolder}/.git/",
+      "target": "${containerWorkspaceFolder}/.git/",
+      "type": "bind"
     }
-  },
+  ],
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
+    "ghcr.io/devcontainers/features/comqmon-utils:2": {
       "installOhMyZsh": "true"
-    },
-    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {}
+    }
   },
   "customizations": {
     "vscode": {
@@ -24,14 +23,12 @@
         "ms-python.python",
         "ms-python.debugpy",
         "ms-python.vscode-pylance",
-        "charliermarsh.ruff",
-        "elagil.pre-commit-helper"
+        "charliermarsh.ruff"
       ],
       "settings": {
         "ruff.enable": true,
         "ruff.lint.enable": true,
         "ruff.organizeImports": true,
-        "pre-commit-helper.config": "project/.pre-commit-config.yaml",
         "launch": {
           "version": "0.2.0",
           "configurations": [

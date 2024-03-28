@@ -8,7 +8,6 @@ repos:
           - id: check-toml
           - id: end-of-file-fixer
           - id: trailing-whitespace
-          - id: double-quote-string-fixer
     - repo: https://github.com/adrienverge/yamllint.git
       rev: v1.21.0
       hooks:
@@ -22,6 +21,4 @@ repos:
       rev: v0.3.4
       hooks:
           - id: ruff
-            types_or: [python, pyi, jupyter]
-          - id: ruff-format
             types_or: [python, pyi, jupyter]

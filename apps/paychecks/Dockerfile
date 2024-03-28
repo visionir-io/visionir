@@ -4,14 +4,12 @@ RUN  curl -sSL https://install.python-poetry.org | python3 -
 
 ENV PATH="${PATH}:/root/.local/bin"
 
-WORKDIR /paychecks/app
+WORKDIR /paychecks
 
-COPY app/project ./project
+COPY pyproject.toml ./pyproject.toml
 
 RUN poetry install -C project/
 
-COPY app/src ./src
+COPY ./src ./src
 
-WORKDIR /paychecks/app/project
-
-CMD [ "poetry", "run", "streamlit", "run", "../src/main.py" ]
+CMD [ "poetry", "run", "streamlit", "run", "src/main.py" ]

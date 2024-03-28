@@ -4,14 +4,6 @@
   "workspaceFolder": "/paychecks/app",
   "postCreateCommand": "cd project && poetry shell",
   "shutdownAction": "stopCompose",
-  "forwardPorts": [8501],
-  "mounts": [
-    {
-      "source": "${localWorkspaceFolder}/.git/",
-      "target": "${containerWorkspaceFolder}/.git/",
-      "type": "bind"
-    }
-  ],
   "features": {
     "ghcr.io/devcontainers/features/comqmon-utils:2": {
       "installOhMyZsh": "true"

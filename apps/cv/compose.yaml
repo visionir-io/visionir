@@ -1,0 +1,10 @@
+---
+services:
+  paychecks:
+    image: docker.io/visionir/cv:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./src:/cv/src
+    - ./data:/cv/data

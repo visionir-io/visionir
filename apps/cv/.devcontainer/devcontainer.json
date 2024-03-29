@@ -1,0 +1,42 @@
+{
+  "dockerComposeFile": "../compose.yaml",
+  "service": "cv",
+  "workspaceFolder": "/cv",
+  "postCreateCommand": "poetry shell",
+  "shutdownAction": "stopCompose",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installOhMyZsh": "true"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter"
+      ],
+      "settings": {
+        "ruff.enable": true,
+        "ruff.lint.enable": true,
+        "ruff.organizeImports": true,
+        "launch": {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "name": "Python Debugger: Current File",
+              "type": "debugpy",
+              "request": "launch",
+              "program": "${file}",
+              "console": "integratedTerminal",
+              "justMyCode": false
+            }
+          ],
+          "compounds": []
+        }
+      }
+    }
+  }
+}

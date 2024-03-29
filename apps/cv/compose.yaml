@@ -1,6 +1,6 @@
 ---
 services:
-  paychecks:
+  cv:
     image: docker.io/visionir/cv:latest
     build:
       context: .
@@ -8,3 +8,5 @@ services:
     volumes:
     - ./src:/cv/src
     - ./data:/cv/data
+    environment:
+    - AWS_ACCESS_KEY_ID=${CLOUDFLARE_R2_ACCESS_KEY_ID}

@@ -28,9 +28,11 @@ resource "cloudflare_record" "root_domain" {
 }
 
 output "visionir_io_nameservers" {
-  value = cloudflare_zone.visionir_io.name_servers
+  value     = cloudflare_zone.visionir_io.name_servers
+  sensitive = true
 }
 
-output "cloudflare-ipv4-ranges" {
-  value = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
+output "zone_id" {
+  value     = cloudflare_zone.visionir_io.id
+  sensitive = true
 }

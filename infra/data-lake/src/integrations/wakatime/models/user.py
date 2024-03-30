@@ -30,14 +30,14 @@ class User(BaseModel):
     last_project: str
     linkedin_username: str
     is_hireable: bool
-    last_branch: None
+    last_branch: str | None
     color_scheme: str
     logged_time_public: bool
     time_format_24hr: bool
     is_email_confirmed: bool
     has_basic_features: bool
     public_email: str
-    modified_at: str
+    modified_at: datetime
     is_email_public: bool
     github_username: str
     last_plugin_name: str
@@ -59,9 +59,9 @@ class User(BaseModel):
     share_last_year_days: bool
     full_name: str
     date_format: str
-    location: None
+    location: str | None
     human_readable_website: str
-    last_heartbeat_at: str
+    last_heartbeat_at: datetime
     is_onboarding_finished: bool
     time_format_display: str
     share_all_time_badge: bool
@@ -70,6 +70,6 @@ class User(BaseModel):
     needs_payment_method: bool
     twitter_username: str
     default_dashboard_range: str
-    wonderfuldev_username: None
+    wonderfuldev_username: str | None
     public_profile_time_range: str
     durations_slice_by: str

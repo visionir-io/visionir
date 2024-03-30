@@ -1,7 +1,7 @@
 {
   "dockerComposeFile": "../compose.yaml",
-  "service": "cv",
-  "workspaceFolder": "/cv",
+  "service": "data-lake",
+  "workspaceFolder": "/data-lake",
   "postCreateCommand": "poetry shell",
   "shutdownAction": "stopCompose",
   "features": {

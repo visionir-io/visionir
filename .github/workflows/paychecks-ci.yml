@@ -1,6 +1,6 @@
 ---
 name    : paychecks-ci-pipeline
-run-name: Build, Tag and Push new image to Docker Hub
+run-name: Build, Tag and Push new image Paychecks
 on      :
   push:
     branches:

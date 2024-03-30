@@ -1,16 +1,16 @@
 ---
 services:
-  cv:
-    image: docker.io/visionir/cv:latest
+  data-lake:
+    image: docker.io/visionir/data-lake:latest
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-    - ./src:/cv/src
-    - ./data:/cv/data
-    - ./pyproject.toml:/cv/pyproject.toml
+    - ./src:/data-lake/src
+    - ./data:/data-lake/data
+    - ./pyproject.toml:/data-lake/pyproject.toml
     environment:
     - AWS_ACCESS_KEY_ID=${CLOUDFLARE_R2_ACCESS_KEY_ID}
     - AWS_SECRET_ACCESS_KEY=${CLOUDFLARE_R2_SECRET_ACCESS_KEY}
     - AWS_S3_ALLOW_UNSAFE_RENAME=true
-    - PYTHONPATH=/cv
+    - PYTHONPATH=/data-lake

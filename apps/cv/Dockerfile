@@ -8,7 +8,7 @@ WORKDIR /cv
 
 COPY pyproject.toml ./pyproject.toml
 
-RUN poetry install -C project/
+RUN poetry install
 
 COPY ./src ./src
 

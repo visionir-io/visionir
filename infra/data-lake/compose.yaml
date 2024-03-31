@@ -6,11 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-    - ./src:/data-lake/src
+    - ./src:/data-lake
     - ./data:/data-lake/data
     - ./pyproject.toml:/data-lake/pyproject.toml
-    environment:
-    - AWS_ACCESS_KEY_ID=${CLOUDFLARE_R2_ACCESS_KEY_ID}
-    - AWS_SECRET_ACCESS_KEY=${CLOUDFLARE_R2_SECRET_ACCESS_KEY}
-    - AWS_S3_ALLOW_UNSAFE_RENAME=true
-    - PYTHONPATH=/data-lake
+    env_file:
+    - .env

@@ -8,8 +8,8 @@ WORKDIR /paychecks
 
 COPY pyproject.toml ./pyproject.toml
 
-RUN poetry install -C project/
+RUN poetry install
 
-COPY ./src ./src
+COPY ./src /paychecks
 
-CMD [ "poetry", "run", "streamlit", "run", "src/main.py" ]
+CMD [ "poetry", "run", "streamlit", "run", "main.py" ]

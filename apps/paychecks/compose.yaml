@@ -1,11 +1,12 @@
 ---
 services:
-    paychecks:
-        image: docker.io/visionir/paychecks:latest
-        build:
-            context: .
-            dockerfile: Dockerfile
-        volumes:
-            - ./src:/paychecks/src
-        ports:
-            - 8501:8501
+  paychecks:
+    image: docker.io/visionir/paychecks:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./src:/paychecks
+    - ./pyproject.toml:/pyproject.toml
+    ports:
+    - 8501:8501

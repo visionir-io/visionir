@@ -1,11 +1,11 @@
 {
   "dockerComposeFile": "../compose.yaml",
   "service": "paychecks",
-  "workspaceFolder": "/paychecks/app",
-  "postCreateCommand": "cd project && poetry shell",
+  "workspaceFolder": "/paychecks",
+  "postCreateCommand": "poetry shell",
   "shutdownAction": "stopCompose",
   "features": {
-    "ghcr.io/devcontainers/features/comqmon-utils:2": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
       "installOhMyZsh": "true"
     }
   },
@@ -15,12 +15,39 @@
         "ms-python.python",
         "ms-python.debugpy",
         "ms-python.vscode-pylance",
-        "charliermarsh.ruff"
+        "charliermarsh.ruff",
+        "mechatroner.rainbow-csv",
+        "ms-toolsai.jupyter"
       ],
       "settings": {
-        "ruff.enable": true,
-        "ruff.lint.enable": true,
-        "ruff.organizeImports": true,
+        "settings": {
+          "ruff.enable": true,
+          "ruff.lint.enable": true,
+          "ruff.organizeImports": true,
+          "ruff.format.args": [
+            "--line-length",
+            "88",
+            "--target-version",
+            "py311"
+          ],
+          "ruff.lint.args": [
+            "--extend-select",
+            "E501",
+            "--ignore",
+            "E712",
+            "--target-version",
+            "py312"
+          ]
+        },
+        "[python]": {
+          "editor.formatOnSave": true,
+          "defailtFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.unusedImports": "explicit"
+          },
+          "editor.rulers": [0, 88]
+        },
         "launch": {
           "version": "0.2.0",
           "configurations": [
@@ -31,6 +58,15 @@
               "program": "${file}",
               "console": "integratedTerminal",
               "justMyCode": false
+            },
+            {
+              "name": "Python Debugger: Streamlit",
+              "type": "debugpy",
+              "request": "launch",
+              "module": "streamlit",
+              "console": "integratedTerminal",
+              "justMyCode": false,
+              "args": ["run", "${file}"]
             }
           ],
           "compounds": []

@@ -12,5 +12,4 @@ RUN poetry install
 
 COPY ./src /paychecks
 
-CMD [ "streamlit", "run", "main.py" ]
-# CMD [ "sleep", "infinity" ]
+CMD [ "poetry", "run", "streamlit", "run", "main.py" ]

@@ -2,12 +2,13 @@
 services:
   paychecks:
     image: docker.io/visionir/paychecks:latest
+    pull_policy: always
     build:
       context: .
       dockerfile: Dockerfile
     working_dir: /paychecks
     volumes:
     - ./src:/paychecks
-    - ./pyproject.toml:/paychecks/pyproject.toml
+    - ./pyproject.toml:/pyproject.toml
     ports:
     - 8501:8501

@@ -2,7 +2,6 @@
   "dockerComposeFile": "../compose.yaml",
   "service": "data-lake",
   "workspaceFolder": "/data-lake",
-  "postCreateCommand": "poetry shell",
   "shutdownAction": "stopCompose",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {

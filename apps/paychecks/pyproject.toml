@@ -10,6 +10,7 @@ package-mode = false
 python = "~3.12"
 streamlit = "^1.32.2"
 ruff = "^0.3.3"
+pyroscope-io = "^0.8.5"
 
 [build-system]
 requires = ["poetry-core"]

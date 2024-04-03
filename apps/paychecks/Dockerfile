@@ -6,10 +6,11 @@ ENV PATH="${PATH}:/root/.local/bin"
 
 WORKDIR /paychecks
 
-COPY pyproject.toml ./pyproject.toml
+COPY ./pyproject.toml ./pyproject.toml
 
 RUN poetry install
 
 COPY ./src /paychecks
 
-CMD [ "poetry", "run", "streamlit", "run", "main.py" ]
+CMD [ "streamlit", "run", "main.py" ]
+# CMD [ "sleep", "infinity" ]

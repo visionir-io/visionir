@@ -2,7 +2,6 @@
   "dockerComposeFile": "../compose.yaml",
   "service": "paychecks",
   "workspaceFolder": "/paychecks",
-  "postCreateCommand": "poetry shell",
   "shutdownAction": "stopCompose",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
@@ -24,12 +23,7 @@
           "ruff.enable": true,
           "ruff.lint.enable": true,
           "ruff.organizeImports": true,
-          "ruff.format.args": [
-            "--line-length",
-            "88",
-            "--target-version",
-            "py311"
-          ],
+          "ruff.format.args": ["--line-length", "88"],
           "ruff.lint.args": [
             "--extend-select",
             "E501",

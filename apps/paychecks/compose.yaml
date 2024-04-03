@@ -5,8 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    working_dir: /paychecks
     volumes:
     - ./src:/paychecks
-    - ./pyproject.toml:/pyproject.toml
+    - ./pyproject.toml:/paychecks/pyproject.toml
     ports:
     - 8501:8501

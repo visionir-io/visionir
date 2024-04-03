@@ -1,0 +1,23 @@
+---
+services:
+  pyroscope:
+    container_name: pyroscope
+    image: grafana/pyroscope:latest
+    ports:
+    - 4040:4040
+    networks:
+    - pyroscope
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:main
+    ports:
+    - 3000:3000
+    environment:
+    - GF_FEATURE_TOGGLES_ENABLE=flameGraph
+    networks:
+    - pyroscope
+    depends_on:
+    - pyroscope
+networks:
+  pyroscope:
+    driver: bridge

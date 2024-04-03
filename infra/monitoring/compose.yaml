@@ -7,6 +7,8 @@ services:
     - 4040:4040
     networks:
     - pyroscope
+    volumes:
+    - ./pyroscope_data:/data
   grafana:
     container_name: grafana
     image: grafana/grafana:main
@@ -17,6 +19,13 @@ services:
     networks:
     - pyroscope
     depends_on:
+    - pyroscope
+  paychecks:
+    image: docker.io/visionir/paychecks:latest
+    pull_policy: always
+    ports:
+    - 8501:8501
+    networks:
     - pyroscope
 networks:
   pyroscope:

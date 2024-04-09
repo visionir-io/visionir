@@ -20,6 +20,7 @@
       ],
       "settings": {
         "settings": {
+          "terminal.integrated.shell.linux": "/bin/zsh",
           "ruff.enable": true,
           "ruff.lint.enable": true,
           "ruff.organizeImports": true,
@@ -60,7 +61,7 @@
               "module": "streamlit",
               "console": "integratedTerminal",
               "justMyCode": false,
-              "args": ["run", "${file}"]
+              "args": ["run", "main.py"]
             }
           ],
           "compounds": []

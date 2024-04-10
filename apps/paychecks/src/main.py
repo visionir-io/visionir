@@ -1,5 +1,5 @@
 import streamlit as st
-from apps.paychecks.src.logger import Logger
+from logger import Logger
 
 
 @st.cache_resource()

@@ -19,21 +19,19 @@
         "ms-toolsai.jupyter"
       ],
       "settings": {
-        "settings": {
-          "terminal.integrated.shell.linux": "/bin/zsh",
-          "ruff.enable": true,
-          "ruff.lint.enable": true,
-          "ruff.organizeImports": true,
-          "ruff.format.args": ["--line-length", "88"],
-          "ruff.lint.args": [
-            "--extend-select",
-            "E501",
-            "--ignore",
-            "E712",
-            "--target-version",
-            "py312"
-          ]
-        },
+        "terminal.integrated.shell.linux": "/bin/zsh",
+        "ruff.enable": true,
+        "ruff.lint.enable": true,
+        "ruff.organizeImports": true,
+        "ruff.format.args": ["--line-length", "88"],
+        "ruff.lint.args": [
+          "--extend-select",
+          "E501",
+          "--ignore",
+          "E712",
+          "--target-version",
+          "py312"
+        ],
         "[python]": {
           "editor.formatOnSave": true,
           "defailtFormatter": "charliermarsh.ruff",

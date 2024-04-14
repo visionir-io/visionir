@@ -1,8 +1,9 @@
-from logging import DEBUG, WARNING, StreamHandler, basicConfig, getLogger
-from tempfile import NamedTemporaryFile
 from datetime import datetime
+from logging import DEBUG, WARNING, StreamHandler, basicConfig, getLogger
 from sys import stdout
-import pyroscope
+from tempfile import NamedTemporaryFile
+import pyroscope_io
+from os import getenv
 
 
 class Singleton:
@@ -18,7 +19,7 @@ class Logger(Singleton):
     def init_logger(self, module_name: str):
         with NamedTemporaryFile(
             delete=False,
-            dir="/data",
+            dir=getenv("LOG_DIR", "/tmp"),
             prefix=f"{module_name}_{datetime.now().strftime('%Y%m%dT%H%M%S')}_",
         ) as f:
             basicConfig(
@@ -37,13 +38,14 @@ class Logger(Singleton):
         return logger
 
 
-pyroscope.configure(
-    application_name="paychecks",  # replace this with some name for your application
-    server_address="http://pyroscope.visionir.io",  # replace this with the address of your Pyroscope server
-    sample_rate=100,  # default is 100
-    detect_subprocesses=False,  # detect subprocesses started by the main process; default is False
-    oncpu=True,  # report cpu time only; default is True
-    gil_only=True,  # only include traces for threads that are holding on to the Global Interpreter Lock; default is True
-    enable_logging=True,  # does enable logging facility; default is False
+pyroscope_io.configure(
+    application_name="paychecks",
+    server_address="https://pyroscope.visionir.io",
+    sample_rate=100,
+    detect_subprocesses=True,
+    gil_only=True,
+    report_pid=True,
+    report_thread_id=True,
+    report_thread_name=True,
     tags={"app": "paychecks"},
 )

@@ -30,7 +30,7 @@
           "--ignore",
           "E712",
           "--target-version",
-          "py312"
+          "py311"
         ],
         "[python]": {
           "editor.formatOnSave": true,

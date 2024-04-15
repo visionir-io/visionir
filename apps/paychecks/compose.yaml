@@ -9,8 +9,14 @@ services:
       dockerfile: Dockerfile
     working_dir: /paychecks
     volumes:
+    - data:/data
     - ./src:/paychecks
-    - ./data:/data
     - ./pyproject.toml:/pyproject.toml
     ports:
     - 8501:8501
+    environment:
+    - LOG_DIR=/data
+    - APP_NAME=paychecks
+    - PYROSCOPE_SERVER=https://pyroscope.visionir.io
+volumes :
+  data:

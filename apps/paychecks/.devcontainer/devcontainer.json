@@ -3,6 +3,8 @@
   "service": "paychecks",
   "workspaceFolder": "/paychecks",
   "shutdownAction": "stopCompose",
+  "overrideCommand": true,
+  "postAttachCommand": "sleep infinity",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installOhMyZsh": "true"
@@ -15,7 +17,6 @@
         "ms-python.debugpy",
         "ms-python.vscode-pylance",
         "charliermarsh.ruff",
-        "mechatroner.rainbow-csv",
         "ms-toolsai.jupyter"
       ],
       "settings": {
@@ -37,7 +38,7 @@
           "defailtFormatter": "charliermarsh.ruff",
           "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit",
-            "source.unusedImports": "explicit"
+            "source.unusedImports": "always"
           },
           "editor.rulers": [0, 88]
         },

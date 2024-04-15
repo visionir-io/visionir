@@ -11,6 +11,7 @@ python = "~3.11"
 streamlit = "^1.32.2"
 ruff = "^0.3.3"
 pyroscope-io = "^0.8.5"
+ipykernel = "^6.29.4"
 
 [build-system]
 requires = ["poetry-core"]

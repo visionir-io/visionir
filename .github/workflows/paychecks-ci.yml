@@ -9,8 +9,7 @@ on      :
     - apps/paychecks/Dockerfile
     - apps/paychecks/**
     - .github/workflows/paychecks-ci.yml
-    paths-ignore:
-    - apps/paychecks/.devcontainer/**
+    - '!apps/paychecks/.devcontainer/**'
 
 jobs    :
   handle-docker-image:

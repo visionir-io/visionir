@@ -26,6 +26,36 @@ resource "cloudflare_record" "root_domain" {
   proxied         = true
   depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]
 }
+resource "cloudflare_record" "paychecks" {
+  zone_id         = cloudflare_zone.visionir_io.id
+  allow_overwrite = true
+  name            = "paychecks"
+  value           = "@"
+  type            = "CNAME"
+  ttl             = 1
+  proxied         = true
+  depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io, cloudflare_record.root_domain]
+}
+resource "cloudflare_record" "pyroscope" {
+  zone_id         = cloudflare_zone.visionir_io.id
+  allow_overwrite = true
+  name            = "pyroscope"
+  value           = "@"
+  type            = "CNAME"
+  ttl             = 1
+  proxied         = true
+  depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io, cloudflare_record.root_domain]
+}
+resource "cloudflare_record" "alloy" {
+  zone_id         = cloudflare_zone.visionir_io.id
+  allow_overwrite = true
+  name            = "alloy"
+  value           = "@"
+  type            = "CNAME"
+  ttl             = 1
+  proxied         = true
+  depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io, cloudflare_record.root_domain]
+}
 
 output "visionir_io_nameservers" {
   value     = cloudflare_zone.visionir_io.name_servers

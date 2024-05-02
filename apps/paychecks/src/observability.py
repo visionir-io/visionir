@@ -23,6 +23,7 @@ class Observer:
             enable_logging=True,
             report_thread_id=True,
             report_thread_name=True,
+            oncpu=False,
         )
         basicConfig(
             filename=LOG_FILE,
@@ -31,6 +32,7 @@ class Observer:
             format="%(levelname)s:%(asctime)s:%(filename)s:%(module)s:%(funcName)s:%(lineno)d:%(message)s",
             datefmt="%d-%m-%YT%H:%M:%S",
         )
+        # important when debugging live apps (streamlit, flask, etc)
         getLogger("watchdog.observers.inotify_buffer").setLevel(WARNING)
         logger = getLogger("observer")
         logger.addHandler(StreamHandler(stdout))

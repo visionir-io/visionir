@@ -1,0 +1,15 @@
+prometheus.remote_write "mimir" {
+  // Send metrics to a locally running Mimir.
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
+  }
+}
+
+prometheus.scrape "node_exporter" {
+        targets = [{
+                __address__ = "localhost:9100",
+        }]
+        forward_to      = [prometheus.remote_write.mimir.receiver]
+        job_name        = "node_exporter"
+        scrape_interval = "15s"
+}

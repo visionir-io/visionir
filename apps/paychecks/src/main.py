@@ -1,3 +1,5 @@
+from os import getenv
+
 import streamlit as st
 
 
@@ -12,7 +14,6 @@ obs = get_logger()
 
 
 @st.cache_data
-@obs.tag_wrapping({"function": "calculate_interest"})
 def calculate_interest(check_amount: float, interest_paid: float, days_to_pay: float):
     daily_interest_rate = interest_paid / days_to_pay
     monthly_value = daily_interest_rate * 30
@@ -20,7 +21,7 @@ def calculate_interest(check_amount: float, interest_paid: float, days_to_pay: f
     return check_intetest
 
 
-@obs.tag_wrapping({"function": "main"})
+@obs.tag_wrapping({"env": getenv("ENV", "dev")})
 def main():
     obs.logger.debug("Application started")
     with st.form(key="paycheck calculation"):

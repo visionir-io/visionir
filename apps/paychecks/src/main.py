@@ -1,3 +1,4 @@
+import asyncio
 from os import getenv
 
 import streamlit as st
@@ -13,8 +14,10 @@ def get_logger():
 obs = get_logger()
 
 
-@st.cache_data
-def calculate_interest(check_amount: float, interest_paid: float, days_to_pay: float):
+# @st.cache_data
+async def calculate_interest(
+    check_amount: float, interest_paid: float, days_to_pay: float
+):
     daily_interest_rate = interest_paid / days_to_pay
     monthly_value = daily_interest_rate * 30
     check_intetest = (monthly_value / check_amount) * 100
@@ -22,7 +25,7 @@ def calculate_interest(check_amount: float, interest_paid: float, days_to_pay: f
 
 
 @obs.tag_wrapping({"env": getenv("ENV", "dev")})
-def main():
+async def main():
     obs.logger.debug("Application started")
     with st.form(key="paycheck calculation"):
         st.write("Welcome to the paycheck calculator")
@@ -36,7 +39,7 @@ def main():
             obs.logger.info(
                 f"params received: {check_amount=},{interest_paid=},{days_to_pay=}"
             )
-            check_intetest = calculate_interest(
+            check_intetest = await calculate_interest(
                 check_amount, interest_paid, days_to_pay
             )
             st.write(f"monthly value interest rate: {check_intetest:.2f}%")
@@ -44,4 +47,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

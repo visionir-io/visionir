@@ -10,9 +10,12 @@ terraform {
       source  = "hashicorp/local"
       version = "2.5.1"
     }
+    sendgrid = {
+      source  = "indentinc/sendgrid"
+      version = "1.0.1"
+    }
   }
 }
-
 provider "cloudflare" {
   api_key = var.cloudflare_api_key
   email   = var.visionir_email
@@ -21,4 +24,8 @@ provider "cloudflare" {
 provider "oci" {
   tenancy_ocid        = var.oci_tenancy_id
   config_file_profile = var.config_file_profile
+}
+
+provider "sendgrid" {
+  api_key = var.sendgrid_api_key
 }

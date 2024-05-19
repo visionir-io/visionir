@@ -56,7 +56,13 @@ variable "home_absolute_path" {
 
 }
 
-variable "home_public_ip" {
-  description = "Absolute path to the home directory"
+variable "sendgrid_api_key" {
+  description = "The API key for Sendgrid"
   type        = string
+}
+
+variable "zoho_txt_record_value" {
+  description = "The value for the Zoho TXT record"
+  type        = string
+
 }

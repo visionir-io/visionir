@@ -43,23 +43,6 @@ resource "oci_core_network_security_group" "visionir" {
   display_name   = "visionir_nsg"
 }
 
-resource "oci_core_network_security_group_security_rule" "ssh_inbound" {
-  description               = "Allow SSH from home"
-  network_security_group_id = oci_core_network_security_group.visionir.id
-  direction                 = "INGRESS"
-  protocol                  = "6"
-  source                    = var.home_public_ip
-  stateless                 = false
-  source_type               = "CIDR_BLOCK"
-
-  tcp_options {
-    destination_port_range {
-      min = 22
-      max = 22
-    }
-  }
-}
-
 resource "oci_core_network_security_group_security_rule" "outbound_https" {
   description               = "Allow HTTPS traffic to the internet"
   network_security_group_id = oci_core_network_security_group.visionir.id

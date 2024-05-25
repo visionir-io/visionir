@@ -1,0 +1,84 @@
+---
+services:
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    pull_policy: if_not_present
+    restart: unless-stopped
+    depends_on:
+    - pyroscope
+    - mimir
+    - grafana
+    - node_exporter
+    ports:
+    - 12345:12345
+    networks:
+    - observability
+    volumes:
+    - ./observability/conf-tools/conf.alloy:/etc/alloy/conf.alloy
+    - alloy:/var/lib/alloy/data
+    command:
+    - run
+    - --server.http.listen-addr=0.0.0.0:12345
+    - --storage.path=/var/lib/alloy/data
+    - /etc/alloy/conf.alloy
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    pull_policy: if_not_present
+    restart: unless-stopped
+    networks:
+    - observability
+    ports:
+    - 3000:3000
+    volumes:
+    - ./observability/conf-tools/grafana.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+    environment:
+    - GF_FEATURE_TOGGLES_ENABLE=flameGraph
+    - GF_INSTALL_PLUGINS=grafana-github-datasource
+
+  mimir:
+    image: grafana/mimir:latest
+    container_name: mimir
+    pull_policy: if_not_present
+    restart: unless-stopped
+    networks:
+    - observability
+    ports:
+    - 9009:9009
+    volumes:
+    - ./observability/conf-tools/mimir.yaml:/etc/mimir/mimir.yaml
+    - mimir:/tmp/mimir/data/tsdb
+    command: --config.file=/etc/mimir/mimir.yaml
+
+  pyroscope:
+    image: grafana/pyroscope:latest
+    container_name: pyroscope
+    pull_policy: if_not_present
+    restart: unless-stopped
+    networks:
+    - observability
+    ports:
+    - 4040:4040
+    volumes:
+    - pyroscope:/data
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    pull_policy: if_not_present
+    restart: unless-stopped
+    pid: host
+    network_mode: host
+    volumes:
+    - /:/host:ro,rslave
+    command:
+    - --path.rootfs=/host
+volumes :
+  alloy:
+  pyroscope:
+  mimir:
+
+networks:
+  observability:

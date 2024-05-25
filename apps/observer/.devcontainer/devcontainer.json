@@ -1,0 +1,72 @@
+{
+  "dockerComposeFile": "../compose.yaml",
+  "service": "observer",
+  "workspaceFolder": "/visionir-io/observer",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": true,
+  "postAttachCommand": "sleep infinity",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installOhMyZsh": "true"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-toolsai.jupyter"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/visionir-io/.venv/bin/python",
+        "terminal.integrated.shell.linux": "/bin/zsh",
+        "ruff.enable": true,
+        "ruff.lint.enable": true,
+        "ruff.organizeImports": true,
+        "ruff.format.args": ["--line-length", "88"],
+        "ruff.lint.args": [
+          "--extend-select",
+          "E501",
+          "--ignore",
+          "E712",
+          "--target-version",
+          "py311"
+        ],
+        "[python]": {
+          "editor.formatOnSave": true,
+          "defailtFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "source.unusedImports": "always"
+          },
+          "editor.rulers": [0, 88]
+        },
+        "launch": {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "name": "Python Debugger: Current File",
+              "type": "debugpy",
+              "request": "launch",
+              "program": "${file}",
+              "console": "integratedTerminal",
+              "justMyCode": false
+            },
+            {
+              "name": "Python Debugger: Streamlit",
+              "type": "debugpy",
+              "request": "launch",
+              "module": "streamlit",
+              "console": "integratedTerminal",
+              "justMyCode": false,
+              "args": ["run", "main.py"]
+            }
+          ],
+          "compounds": []
+        }
+      }
+    }
+  }
+}

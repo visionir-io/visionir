@@ -1,5 +1,5 @@
-variable "cloudflare_api_key" {
-  description = "The API key for the Cloudflare R2 storage"
+variable "cloudflare_api_token" {
+  description = "The API key for the Cloudflare Zone API"
   type        = string
 }
 

@@ -1,7 +1,8 @@
 terraform {
   required_providers {
     cloudflare = {
-      source = "cloudflare/cloudflare"
+      source  = "cloudflare/cloudflare"
+      version = "4.33.0"
     }
     oci = {
       source = "oracle/oci"
@@ -17,8 +18,7 @@ terraform {
   }
 }
 provider "cloudflare" {
-  api_key = var.cloudflare_api_key
-  email   = var.visionir_email
+  api_token = var.cloudflare_api_token
 }
 
 provider "oci" {

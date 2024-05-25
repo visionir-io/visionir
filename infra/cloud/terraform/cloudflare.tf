@@ -102,6 +102,17 @@ resource "cloudflare_record" "sendgrid_records" {
   proxied         = false
   depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]
 }
+
+resource "cloudflare_record" "pyroscope" {
+  zone_id         = cloudflare_zone.visionir_io.id
+  allow_overwrite = true
+  name            = "pyroscope"
+  value           = cloudflare_record.root_domain.name
+  type            = "CNAME"
+  ttl             = 1
+  proxied         = true
+  depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io, cloudflare_record.root_domain]
+}
 resource "cloudflare_record" "zoho_records" {
   for_each        = { for idx, record in local.zoho_records : idx => record }
   zone_id         = cloudflare_zone.visionir_io.id

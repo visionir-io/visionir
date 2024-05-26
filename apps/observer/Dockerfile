@@ -10,7 +10,7 @@ ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 
 COPY ./pyproject.toml /visionir-io/pyproject.toml
 
-COPY ./REAMDE.md /visionir-io/REAMDE.md
+COPY ./README.md /visionir-io/README.md
 
 RUN cd /visionir-io && poetry install
 

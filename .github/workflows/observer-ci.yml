@@ -49,6 +49,10 @@ jobs    :
       with:
         platforms: linux/amd64,linux/arm64
         file: apps/observer/Dockerfile
+        build-args: |
+          PYPI_TOKEN=${{ secrets.PYPI_TOKEN }}
+        secrets: |
+          PYPI_TOKEN=${{ secrets.PYPI_TOKEN }}
         context: apps/observer
         push: true
         tags: |

@@ -43,6 +43,9 @@ jobs    :
           image=moby/buildkit:master
           network=host
         install: true
+    - name: export PYPI_TOKEN
+      id: pytoken
+      run: export PYPI_TOKEN=${{ secrets.PYPI_TOKEN }}
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v5

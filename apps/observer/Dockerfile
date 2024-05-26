@@ -10,6 +10,8 @@ ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 
 COPY ./pyproject.toml /visionir-io/pyproject.toml
 
+COPY ./REAMDE.md /visionir-io/REAMDE.md
+
 RUN cd /visionir-io && poetry install
 
 RUN poetry config pypi-token.pypi $PYPI_TOKEN

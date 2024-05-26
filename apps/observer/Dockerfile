@@ -1,5 +1,8 @@
 FROM python:3.11-bullseye
 
+RUN --mount=type=secret,id=PYPI_TOKEN \
+    cat /run/secrets/PYPI_TOKEN
+
 RUN  curl -sSL https://install.python-poetry.org | python3 -
 
 ENV PATH="${PATH}:/root/.local/bin"

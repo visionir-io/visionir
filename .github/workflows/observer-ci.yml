@@ -43,9 +43,6 @@ jobs    :
           image=moby/buildkit:master
           network=host
         install: true
-    - name: export PYPI_TOKEN
-      id: pytoken
-      run: export PYPI_TOKEN=${{ secrets.PYPI_TOKEN }}
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v5
@@ -53,8 +50,6 @@ jobs    :
         platforms: linux/amd64,linux/arm64
         file: apps/observer/Dockerfile
         context: apps/observer
-        secrets: |
-          "PYPI_TOKEN=${{ secrets.PYPI_TOKEN }}"
         push: true
         tags: |
           ${{ secrets.DOCKER_USER }}/observer:${{ steps.date.outputs.TAG_DATE }}.${{ github.run_number }}

@@ -21,6 +21,8 @@ jobs    :
       with:
         sparse-checkout: |
           apps/observer
+    - name: cd into the directory
+      run: cd apps/observer
     - name: Generate Date
       id: date
       run: echo "TAG_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"

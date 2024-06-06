@@ -21,18 +21,13 @@ jobs    :
       with:
         sparse-checkout: |
           apps/observer
-    - name: cd into the directory
-      run: cd apps/observer
     - name: Generate Date
       id: date
       run: echo "TAG_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
     - uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        cache: poetry
     - uses: abatilo/actions-poetry@v2
-      with:
-        poetry-version: '3.11'
     - name: build the package
       run: |
         poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}

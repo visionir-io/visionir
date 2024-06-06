@@ -1,14 +1,13 @@
 ---
 name: observer-ci-pipeline to push to PyPi
-run-name: Build, promote and Publish new packge observer
+run-name: Build and Publish new packge observer
 on:
   push:
     branches:
       - master
     paths:
-      - apps/observer/**
-      - .github/workflows/observer-pypi.yml
-      - "!apps/observer/.devcontainer/**"
+      - apps/observer/src/**
+      - apps/observer/pyproject.toml
 
 jobs:
   handle-pypi-package:

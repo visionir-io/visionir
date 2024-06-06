@@ -3,7 +3,7 @@ name = "visionir_io_observer"
 version = "0.1.0"
 description = "Observer class for logging and pyroscope-app"
 authors = ["Nir Abutbul <nir@visionir.io>"]
-readme = "/visionir-io/README.md"
+readme = "README.md"
 license = "MIT"
 repository = "https://github.com/visionir-io/visionir/tree/master/apps/observer"
 

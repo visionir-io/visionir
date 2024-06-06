@@ -1,10 +1,9 @@
 {
   "dockerComposeFile": "../compose.yaml",
   "service": "observer",
-  "workspaceFolder": "/visionir-io/observer",
+  "workspaceFolder": "/observer",
   "shutdownAction": "stopCompose",
-  "overrideCommand": true,
-  "postAttachCommand": "sleep infinity",
+  "postStartCommand": "poetry config pypi-token.pypi $PYPI_TOKEN",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installOhMyZsh": "true"
@@ -20,7 +19,7 @@
         "ms-toolsai.jupyter"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/visionir-io/.venv/bin/python",
+        "python.defaultInterpreterPath": "/observer/.venv/bin/python",
         "terminal.integrated.shell.linux": "/bin/zsh",
         "ruff.enable": true,
         "ruff.lint.enable": true,
@@ -53,15 +52,6 @@
               "program": "${file}",
               "console": "integratedTerminal",
               "justMyCode": false
-            },
-            {
-              "name": "Python Debugger: Streamlit",
-              "type": "debugpy",
-              "request": "launch",
-              "module": "streamlit",
-              "console": "integratedTerminal",
-              "justMyCode": false,
-              "args": ["run", "main.py"]
             }
           ],
           "compounds": []

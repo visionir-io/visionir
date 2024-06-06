@@ -1,21 +1,16 @@
 ---
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
-  hooks:
-  - id: check-yaml
-  - id: check-json
-  - id: check-toml
-  - id: end-of-file-fixer
-  - id: trailing-whitespace
-- repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-  rev: 0.2.1
-  hooks:
-  - id: yamlfmt
-    args: [--mapping, '2', --sequence, '2', --offset, '0', --colons, --width, '120']
-- repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.3.4
-  hooks:
-  - id: ruff
-    types_or: [python, pyi, jupyter]
-    args: [--fix]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.4
+    hooks:
+      - id: ruff
+        types_or: [python, pyi, jupyter]
+        args: [--fix]

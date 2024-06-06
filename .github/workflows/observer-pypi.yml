@@ -1,38 +1,38 @@
 ---
-name    : observer-ci-pipeline to push to PyPi
+name: observer-ci-pipeline to push to PyPi
 run-name: Build, Tag and Push new packge observer
-on      :
+on:
   push:
     branches:
-    - master
+      - master
     paths:
-    - apps/observer/Dockerfile
-    - apps/observer/**
-    - .github/workflows/observer-pypi.yml
-    - '!apps/observer/.devcontainer/**'
+      - apps/observer/Dockerfile
+      - apps/observer/**
+      - .github/workflows/observer-pypi.yml
+      - "!apps/observer/.devcontainer/**"
 
-jobs    :
+jobs:
   handle-docker-image:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Image Directory
-      id: checkout
-      uses: actions/checkout@v4
-      with:
-        sparse-checkout: |
-          apps/observer
-    - name: Generate Date
-      id: date
-      run: echo "TAG_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-    - uses: abatilo/actions-poetry@v2
-    - name: build the package
-      run: |
-        poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-        poetry build
-    - name: publish the package
-      run: |
-        poetry publish
-        echo "Package published to PyPi"
+      - name: Checkout Image Directory
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            apps/observer
+      - name: Generate Date
+        id: date
+        run: echo "TAG_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: abatilo/actions-poetry@v2
+      - name: build the package
+        run: |
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          cd apps/observer && poetry build
+      - name: publish the package
+        run: |
+          poetry publish
+          echo "Package published to PyPi"

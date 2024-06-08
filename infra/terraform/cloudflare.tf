@@ -24,31 +24,31 @@ locals {
       name : "_dmarc.visionir.io",
     value : "v=DMARC1; p=none; rua=mailto:postmaster@visionir.io" },
   ]
-  icloud_records = [
-    { type : "TXT",
-      name : "@",
-      value : "apple-domain=Aiwr3bj9ZmjKRW0k",
-    ttl : 3600 },
-    { type : "MX",
-      name : "@",
-      value : "mx01.mail.icloud.com.",
-      ttl : 3600
-    priority : 10 },
-    { type : "MX",
-      name : "@",
-      value : "mx02.mail.icloud.com.",
-      ttl : 3600
-    priority : 10 },
-    { type : "CNAME",
-      name : "sig1._domainkey",
-      value : "sig1.dkim.visionir.io.at.icloudmailadmin.com.",
-      ttl : 3600
-    },
-    { type : "TXT",
-      name : "@",
-      value : "=spf1 include:zoho.com include:icloud.com ~all",
-    ttl : 3600 }
-  ]
+  # icloud_records = [
+  #   { type : "TXT",
+  #     name : "@",
+  #     value : "apple-domain=Aiwr3bj9ZmjKRW0k",
+  #   ttl : 3600 },
+  #   { type : "MX",
+  #     name : "@",
+  #     value : "mx01.mail.icloud.com.",
+  #     ttl : 3600
+  #   priority : 10 },
+  #   { type : "MX",
+  #     name : "@",
+  #     value : "mx02.mail.icloud.com.",
+  #     ttl : 3600
+  #   priority : 10 },
+  #   { type : "CNAME",
+  #     name : "sig1._domainkey",
+  #     value : "sig1.dkim.visionir.io.at.icloudmailadmin.com.",
+  #     ttl : 3600
+  #   },
+  #   { type : "TXT",
+  #     name : "@",
+  #     value : "=spf1 include:zoho.com include:icloud.com ~all",
+  #   ttl : 3600 }
+  # ]
   discord_records = [
     { type : "TXT",
       name : "_discord.visionir.io",
@@ -120,18 +120,19 @@ resource "cloudflare_record" "discord_records" {
   depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]
 }
 
-resource "cloudflare_record" "icloud_records" {
-  for_each        = { for idx, record in local.icloud_records : idx => record }
-  zone_id         = cloudflare_zone.visionir_io.id
-  allow_overwrite = true
-  name            = each.value.name
-  value           = each.value.value
-  type            = each.value.type
-  priority        = lookup(each.value, "priority", null)
-  ttl             = each.value.ttl
-  proxied         = false
-  depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]
-}
+# resource "cloudflare_record" "icloud_records" {
+#   for_each        = { for idx, record in local.icloud_records : idx => record }
+#   zone_id         = cloudflare_zone.visionir_io.id
+#   allow_overwrite = true
+#   name            = each.value.name
+#   value           = each.value.value
+#   type            = each.value.type
+#   priority        = lookup(each.value, "priority", null)
+#   ttl             = each.value.ttl
+#   proxied         = false
+#   depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]
+# }
+
 resource "cloudflare_record" "observability_apps" {
   for_each        = { for idx, record in local.observability_apps : idx => record }
   zone_id         = cloudflare_zone.visionir_io.id

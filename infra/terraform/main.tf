@@ -1,4 +1,11 @@
 terraform {
+
+  backend "s3" {
+    bucket         = "visionir-tf-state"
+    key            = "terraform.tfstate"
+    region         = "eu-central-1"
+    dynamodb_table = "terraform-locks"
+  }
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
@@ -6,6 +13,10 @@ terraform {
     }
     oci = {
       source = "oracle/oci"
+    }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
     local = {
       source  = "hashicorp/local"
@@ -19,6 +30,12 @@ terraform {
 }
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "aws" {
+  region     = var.aws_region
+  access_key = var.aws_access_key_id
+  secret_key = var.aws_secret_access_key
 }
 
 provider "oci" {

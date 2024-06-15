@@ -1,0 +1,19 @@
+---
+- name: Setup Minikube on Ubuntu
+  hosts: oci
+
+  tasks:
+    - name: Download Minikube apt
+      ansible.builtin.apt:
+        deb: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_arm64.deb
+        state: present
+      become: yes
+
+    - name: Check if Minikube is running
+      command: minikube status -o text
+      register: minikube_status
+      failed_when: false
+
+    - name: Print Minikube status
+      debug:
+        msg: "Minikube status: {{ minikube_status.stdout }}"

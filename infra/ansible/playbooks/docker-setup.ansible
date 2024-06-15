@@ -1,0 +1,66 @@
+---
+- name: Setup Docker on Ubuntu
+  hosts: oci
+  become: yes
+
+  tasks:
+    - name: remove old docker related packages
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - docker-doc
+          - docker-compose
+          - docker-compose-v2
+          - podman-docker
+          - containerd
+          - runc
+        state: absent
+    - name: install docker deps
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+    - name: Create directory for Docker keyring
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+      ignore_errors: yes
+
+    - name: Download Docker GPG key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+      ignore_errors: yes
+
+    - name: Add Docker repository to Apt sources
+      ansible.builtin.shell: |
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      args:
+        executable: /bin/bash
+
+    - name: Update the package list after adding Docker repository
+      ansible.builtin.apt:
+        update_cache: yes
+    - name: Install Docker packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+    - name: Create docker group
+      group:
+        name: docker
+        state: present
+
+    - name: Add current user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes

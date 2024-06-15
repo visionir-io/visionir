@@ -1,0 +1,28 @@
+---
+- name: Zsh setup
+  hosts: oci
+  become: yes
+
+  tasks:
+    - name: Change default shell to Zsh for the current user
+      user:
+        name: "{{ ansible_user }}"
+        shell: /usr/bin/zsh
+
+    - name: Ensure Zsh is the default shell
+      command: chsh -s /usr/bin/zsh "{{ ansible_user }}"
+      args:
+        creates: /usr/bin/zsh
+      register: chsh_output
+
+    - name: Print confirmation
+      debug:
+        msg: "Zsh has been set as the default shell for user {{ ansible_user }}"
+
+    - name: Display current shell
+      command: echo $SHELL
+      register: current_shell
+
+    - name: Print current shell
+      debug:
+        msg: "The current shell is {{ current_shell.stdout }}"

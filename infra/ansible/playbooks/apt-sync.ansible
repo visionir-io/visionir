@@ -1,0 +1,19 @@
+---
+- name: OCI setup
+  hosts: oci
+  become: yes
+
+  tasks:
+    - name: update apt packages
+      ansible.builtin.apt:
+        update_cache: yes
+    - name: upgrade apt packages
+      ansible.builtin.apt:
+        autoremove: yes
+        upgrade: full
+    - name: install vim
+      ansible.builtin.apt:
+        name:
+          - vim
+          - zsh
+        state: latest

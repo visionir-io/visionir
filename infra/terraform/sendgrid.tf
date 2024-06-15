@@ -4,7 +4,3 @@ resource "sendgrid_domain_authentication" "visionir_io" {
   is_default         = true
   automatic_security = true
 }
-
-output "sendgrind_records" {
-  value = sendgrid_domain_authentication.visionir_io.dns
-}

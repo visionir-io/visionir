@@ -3,14 +3,13 @@ data "oci_identity_availability_domains" "availability_domains" {
 }
 
 resource "oci_core_vcn" "visionir" {
-  cidr_block     = var.subnet_cidr_block
   compartment_id = var.oci_tenancy_id
   dns_label      = "vsnirvcn"
   display_name   = "visionir_vcn"
 }
 
 resource "oci_core_subnet" "visionir" {
-  cidr_block     = var.subnet_cidr_block
+  cidr_block     = "10.0.0.0/24"
   compartment_id = var.oci_tenancy_id
   vcn_id         = oci_core_vcn.visionir.id
   route_table_id = oci_core_route_table.visionir.id
@@ -44,6 +43,11 @@ resource "oci_core_network_security_group" "visionir" {
 }
 
 resource "oci_core_network_security_group_security_rule" "outbound_https" {
+  lifecycle {
+    ignore_changes = [
+      source_type,
+    ]
+  }
   description               = "Allow HTTPS traffic to the internet"
   network_security_group_id = oci_core_network_security_group.visionir.id
   direction                 = "EGRESS"
@@ -60,6 +64,11 @@ resource "oci_core_network_security_group_security_rule" "outbound_https" {
 }
 
 resource "oci_core_network_security_group_security_rule" "outbound_http" {
+  lifecycle {
+    ignore_changes = [
+      source_type,
+    ]
+  }
   description               = "Allow HTTP traffic to the internet"
   network_security_group_id = oci_core_network_security_group.visionir.id
   direction                 = "EGRESS"
@@ -111,6 +120,9 @@ resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_htt
 }
 
 resource "oci_core_instance" "visionir" {
+  lifecycle {
+    create_before_destroy = false
+  }
   display_name        = "visionir"
   availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
   compartment_id      = var.oci_tenancy_id
@@ -125,12 +137,13 @@ resource "oci_core_instance" "visionir" {
     "ssh_authorized_keys" = var.oci_ssh_key
   }
   source_details {
-    source_type = "image"
-    source_id   = var.oci_ubuntu_image_id
+    source_type             = "image"
+    source_id               = var.oci_ubuntu_image_id
+    boot_volume_size_in_gbs = 200
   }
   shape_config {
-    ocpus         = 1
-    memory_in_gbs = 6
+    ocpus         = 4
+    memory_in_gbs = 24
   }
 }
 

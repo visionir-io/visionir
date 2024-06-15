@@ -39,12 +39,6 @@ variable "config_file_profile" {
   type        = string
 }
 
-variable "subnet_cidr_block" {
-  description = "The CIDR block for the subnet"
-  type        = string
-  default     = "10.0.0.0/16"
-}
-
 variable "oci_ubuntu_image_id" {
   description = "The OCID of the Ubuntu image"
   type        = string

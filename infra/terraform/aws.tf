@@ -68,13 +68,13 @@ data "aws_iam_policy_document" "terraform_state_policy" {
     ]
     resources = [
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${aws_iam_user.terraform_user.name}",
-      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.tf_state_policy_name}",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.aws_tf_state_policy_name}",
     ]
   }
 }
 
 resource "aws_iam_policy" "terraform_state_policy" {
-  name        = var.tf_state_policy_name
+  name        = var.aws_tf_state_policy_name
   description = "Policy for accessing Terraform state in S3 and locking in DynamoDB"
   policy      = data.aws_iam_policy_document.terraform_state_policy.json
   depends_on  = [data.aws_iam_policy_document.terraform_state_policy]

@@ -119,32 +119,50 @@ resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_htt
   }
 }
 
+resource "oci_core_volume" "visionir_block" {
+  #Required
+  compartment_id      = var.oci_tenancy_id
+  availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
+  display_name        = "visionir_block"
+  size_in_gbs         = floor(var.oci_maximum_storage_size / 2)
+}
+
 resource "oci_core_instance" "visionir" {
-  lifecycle {
-    create_before_destroy = false
-  }
   display_name        = "visionir"
   availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
   compartment_id      = var.oci_tenancy_id
   shape               = "VM.Standard.A1.Flex"
+  metadata = {
+    "ssh_authorized_keys" = var.oci_ssh_key
+  }
+
   create_vnic_details {
     assign_public_ip          = true
     assign_private_dns_record = true
     nsg_ids                   = [oci_core_network_security_group.visionir.id]
     subnet_id                 = oci_core_subnet.visionir.id
   }
-  metadata = {
-    "ssh_authorized_keys" = var.oci_ssh_key
-  }
+
   source_details {
-    source_type             = "image"
-    source_id               = var.oci_ubuntu_image_id
-    boot_volume_size_in_gbs = 200
+    source_type = "image"
+    source_id   = var.oci_ubuntu_image_id
   }
+
   shape_config {
     ocpus         = 4
     memory_in_gbs = 24
   }
+  launch_volume_attachments {
+    type      = "iscsi"
+    volume_id = oci_core_volume.visionir_block.id
+  }
+}
+
+resource "oci_core_volume_attachment" "visionir" {
+  attachment_type = "iscsi"
+  instance_id     = oci_core_instance.visionir.id
+  volume_id       = oci_core_volume.visionir_block.id
+  display_name    = "visionir-attachment"
 }
 
 output "compute-ip-address" {

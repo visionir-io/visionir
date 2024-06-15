@@ -13,7 +13,7 @@ variable "aws_secret_access_key" {
   type        = string
 }
 
-variable "tf_state_policy_name" {
+variable "aws_tf_state_policy_name" {
   description = "The name of the policy for Terraform state"
   type        = string
   default     = "TerraformStatePolicy"
@@ -32,6 +32,11 @@ variable "cloudflare_account_id" {
 variable "oci_tenancy_id" {
   description = "The OCID of the tenancy"
   type        = string
+}
+variable "oci_maximum_storage_size" {
+  description = "The maximum storage size for the volume"
+  type        = number
+  default     = 200
 }
 
 variable "config_file_profile" {

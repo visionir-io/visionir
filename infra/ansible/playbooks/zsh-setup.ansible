@@ -1,23 +1,48 @@
 ---
-- name: Zsh setup
+- name: Zsh and Oh-My-Zsh setup
   hosts: oci
-  become: yes
+
+  vars:
+    files_to_create:
+      - /home/{{ansible_user}}/.zshrc
+      - /home/{{ansible_user}}/.zshenv
+      - /home/{{ansible_user}}/.zprofile
+      - /home/{{ansible_user}}/.zlogin
+
+    zshrc_content: |
+      export LANG=en_US.utf
+      export ZSH_THEME=bira
+      export ZSH=~/.oh-my-zsh
+
+      fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+
+      plugins=(
+              git
+              minikube
+              zsh-syntax-highlighting
+              zsh-autosuggestions
+              )
 
   tasks:
     - name: Change default shell to Zsh for the current user
       user:
         name: "{{ ansible_user }}"
         shell: /usr/bin/zsh
+      become: yes
 
     - name: Ensure Zsh is the default shell
       command: chsh -s /usr/bin/zsh "{{ ansible_user }}"
       args:
         creates: /usr/bin/zsh
       register: chsh_output
+      become: yes
 
-    - name: Print confirmation
-      debug:
-        msg: "Zsh has been set as the default shell for user {{ ansible_user }}"
+    - name: Create multiple empty files
+      file:
+        path: "{{ item }}"
+        state: touch
+      loop: "{{ files_to_create }}"
+      when: not (ansible_file.exists | default(false))
 
     - name: Display current shell
       command: echo $SHELL
@@ -26,3 +51,32 @@
     - name: Print current shell
       debug:
         msg: "The current shell is {{ current_shell.stdout }}"
+
+    - name: Install Oh My Zsh
+      ansible.builtin.git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: ~/.oh-my-zsh
+        depth: 1
+
+    - name: Install zsh-autosuggestions plugin
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        depth: 1
+
+    - name: Install zsh-completions plugin
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-completions
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-completions
+        depth: 1
+
+    - name: Install zsh-syntax-highlighting plugin
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        depth: 1
+
+    - name: update .zshrc
+      blockinfile:
+        path: /home/{{ansible_user}}/.zshrc
+        block: "{{ zshrc_content }}"

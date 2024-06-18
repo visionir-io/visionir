@@ -22,7 +22,7 @@
               zsh-syntax-highlighting
               zsh-autosuggestions
               )
-
+      source $ZSH/oh-my-zsh.sh
   tasks:
     - name: Change default shell to Zsh for the current user
       user:

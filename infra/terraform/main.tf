@@ -26,6 +26,10 @@ terraform {
       source  = "indentinc/sendgrid"
       version = "1.0.1"
     }
+    github = {
+      source  = "integrations/github"
+      version = "6.2.2"
+    }
   }
 }
 provider "cloudflare" {
@@ -45,4 +49,8 @@ provider "oci" {
 
 provider "sendgrid" {
   api_key = var.sendgrid_api_key
+}
+
+provider "github" {
+  token = var.github_token
 }

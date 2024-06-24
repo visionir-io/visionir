@@ -80,3 +80,23 @@ variable "sendgrid_api_key" {
   description = "The API key for Sendgrid"
   type        = string
 }
+
+variable "github_token" {
+  description = "The token for Github"
+  type        = string
+}
+
+variable "docker_token" {
+  description = "The token for Docker"
+  type        = string
+}
+
+variable "docker_user" {
+  description = "The user for Docker"
+  type        = string
+}
+
+variable "pypi_token" {
+  description = "The user for Docker"
+  type        = string
+}

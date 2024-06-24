@@ -1,5 +1,5 @@
 ---
-- name: Apt update and upgrade
+- name: Apt update, upgrade and install packages
   hosts: oci
   become: yes
 
@@ -17,4 +17,6 @@
           - vim
           - zsh
           - git
+          - gh
+          - gnupg
         state: latest

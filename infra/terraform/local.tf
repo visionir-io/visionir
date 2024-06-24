@@ -28,7 +28,8 @@ resource "local_file" "ansible_inventory" {
         ansible_host: ${oci_core_instance.visionir.public_ip}
         ansible_user: ubuntu
         ansible_ssh_private_key_file: ${var.oci_ssh_key}
+      localhost:
+        ansible_connection: local
   EOF
   depends_on = [oci_core_instance.visionir]
-
 }

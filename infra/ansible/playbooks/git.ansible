@@ -1,0 +1,80 @@
+- name: "Set up Git and Github"
+  hosts: oci
+
+  vars:
+    gh_gpg_key: "{{ lookup('env', 'GH_GPG_KEY') }}"
+    local_dir_git_repo: "~/visionir-io" # Change this path if needed
+    github_pat: "{{ lookup('env', 'GH_MASTER_TOKEN') }}"
+    git_config:
+      user.name: "{{ lookup('env', 'GIT_USER') }}"
+      user.email: "{{ lookup('env', 'GIT_EMAIL') }}"
+      gpg.program: gpg
+      commit.gpgsign: true
+
+  tasks:
+    - name: Create GPG key
+      ansible.builtin.shell: |
+        cat <<EOF | gpg --batch --generate-key
+        %no-protection
+        Key-Type: RSA
+        Key-Length: 4096
+        Subkey-Type: RSA
+        Subkey-Length: 4096
+        Name-Real: {{ lookup('env', 'GIT_USER') }}
+        Name-Email: {{ lookup('env', 'GIT_EMAIL') }}
+        Expire-Date: 0
+        EOF
+      args:
+        creates: "{{ ansible_env.HOME }}/.gnupg"
+
+    - name: Get the GPG key ID
+      ansible.builtin.shell: |
+        gpg --list-keys --with-colons {{ lookup('env', 'GIT_EMAIL') }} | awk -F: '/^pub/ {print $5}'
+      register: gpg_key_id
+
+    - name: Print the GPG key ID
+      ansible.builtin.debug:
+        msg: "GPG key ID: {{ gpg_key_id.stdout }}"
+
+    - name: Export the GPG key into a file
+      ansible.builtin.shell:
+        cmd: "gpg --armor --export {{ gpg_key_id.stdout }} > ~/.gnupg/gpg-gh.asc"
+      args:
+        creates: "~/.gnupg/gpg-gh.asc"
+
+    - name: Configure Git user and email
+      ansible.builtin.git_config:
+        scope: global
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop: "{{ git_config | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+
+    - name: Configure Git GPG signing key
+      ansible.builtin.git_config:
+        scope: global
+        name: user.signingkey
+        value: "{{ gpg_key_id.stdout }}"
+
+    - name: Clone the repository
+      ansible.builtin.git:
+        repo: "{{ lookup('env','GIT_REPO_ADDRESS') }}"
+        dest: "{{ local_dir_git_repo }}"
+        version: master # Change the branch if needed
+        force: yes
+
+    - name: Authenticate GitHub CLI
+      shell: |
+        echo $GITHUB_PAT | gh auth login --with-token
+      environment:
+        GITHUB_PAT: "{{ github_pat }}"
+
+    - name: Upload GPG key to GitHub
+      shell: |
+        gh gpg-key add ~/.gnupg/gpg-gh.asc
+
+    # # - name: Clean up GPG key file
+    # #   file:
+    # #     path: "~/.gnupg/gpg-gh.asc"
+    # #     state: absent

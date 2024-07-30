@@ -1,0 +1,63 @@
+- name: Copy GPG key file to the remote host
+  hosts: oci
+  vars:
+    gpg_key_email: "{{ lookup('env', 'GIT_EMAIL') }}"
+    gpg_key_path: .gnupg/gpg-github.asc
+    gpg_secret_key_path: .gnupg/gpg-github-secret.asc
+
+  tasks:
+    - name: Create GPG key
+      # provide the user name and email address if not copying existing one
+      ansible.builtin.shell: |
+        cat <<EOF | gpg --batch --generate-key
+        %no-protection
+        Key-Type: RSA
+        Key-Length: 4096
+        Subkey-Type: RSA
+        Subkey-Length: 4096
+        Name-Real: {{ git_user }}
+        Name-Email: {{ git_email }}
+        Expire-Date: 0
+        EOF
+      delegate_to: localhost
+      ignore_errors: yes
+      args:
+        creates: /home/{{ansible_user}}/{{ gpg_key_path }}
+
+    - name: get gpg key id for the git user
+      ansible.builtin.shell: |
+        gpg --list-keys --with-colons {{ gpg_key_email }} | awk -F: '/^pub/ {print $5}'
+      delegate_to: localhost
+      ignore_errors: yes
+      register: gpg_key_id
+
+    - name: export the GPG keys into files
+      ansible.builtin.shell:
+        cmd: "gpg --armor {{item.cmd}} {{ gpg_key_id.stdout }} > ~/{{ item.path }}"
+      delegate_to: localhost
+      with_items:
+        - { cmd: "--export", path: "{{ gpg_key_path }}" }
+        - { cmd: "--export-secret-keys", path: "{{ gpg_secret_key_path }}" }
+
+    - name: Copy the GPG keys to the remote host
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - {
+            src: "~/{{ gpg_key_path }}",
+            dest: "/home/{{ ansible_user }}/{{ gpg_key_path }}",
+          }
+        - {
+            src: "~/{{ gpg_secret_key_path }}",
+            dest: "/home/{{ ansible_user }}/{{ gpg_secret_key_path }}",
+          }
+
+    - name: Import the GPG keys
+      ansible.builtin.command: gpg --import {{ item }}
+      with_items:
+        - "/home/{{ ansible_user }}/{{ gpg_key_path }}"
+        - "/home/{{ ansible_user }}/{{ gpg_secret_key_path }}"
+
+    - name: Trust the GPG key
+      ansible.builtin.shell: echo "trust\n5\ny\n" | gpg --command-fd 0 --edit-key {{ gpg_key_id.stdout }}

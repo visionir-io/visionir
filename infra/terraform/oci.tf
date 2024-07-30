@@ -119,14 +119,6 @@ resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_htt
   }
 }
 
-resource "oci_core_volume" "visionir_block" {
-  #Required
-  compartment_id      = var.oci_tenancy_id
-  availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
-  display_name        = "visionir_block"
-  size_in_gbs         = floor(var.oci_maximum_storage_size / 2)
-}
-
 resource "oci_core_instance" "visionir" {
   display_name        = "visionir"
   availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
@@ -153,16 +145,14 @@ resource "oci_core_instance" "visionir" {
     memory_in_gbs = 24
   }
   launch_volume_attachments {
-    type      = "iscsi"
-    volume_id = oci_core_volume.visionir_block.id
-  }
-}
+    type = "iscsi"
+    launch_create_volume_details {
+      size_in_gbs          = 50
+      volume_creation_type = "ATTRIBUTES"
+      compartment_id       = var.oci_tenancy_id
 
-resource "oci_core_volume_attachment" "visionir" {
-  attachment_type = "iscsi"
-  instance_id     = oci_core_instance.visionir.id
-  volume_id       = oci_core_volume.visionir_block.id
-  display_name    = "visionir-attachment"
+    }
+  }
 }
 
 output "compute-ip-address" {

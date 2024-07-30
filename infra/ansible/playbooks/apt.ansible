@@ -10,7 +10,7 @@
     - name: upgrade apt packages
       ansible.builtin.apt:
         autoremove: yes
-        upgrade: full
+        upgrade: dist
     - name: install packages
       ansible.builtin.apt:
         name:
@@ -20,3 +20,7 @@
           - gh
           - gnupg
         state: latest
+    - name: reboot
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+        post_reboot_delay: 30

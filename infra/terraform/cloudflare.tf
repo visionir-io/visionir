@@ -28,38 +28,38 @@ locals {
     value : "v=DMARC1; p=none; rua=mailto:postmaster@visionir.io" }
     ,
     # icloud_records
-    { type : "TXT",
-      name : "@",
-      value : "apple-domain=3mM0Q7ibDG1aA7rn",
-      ttl : 3600
-    }
-    ,
-    { type : "TXT",
-      name : "@",
-      value : "v=spf1 include:icloud.com ~all",
-      ttl : 3600
-    }
-    ,
-    { type : "MX",
-      name : "@",
-      value : "mx01.mail.icloud.com.",
-      ttl : 3600
-      priority : 10
-    }
-    ,
-    { type : "MX",
-      name : "@",
-      value : "mx02.mail.icloud.com.",
-      ttl : 3600
-      priority : 10
-    }
-    ,
-    { type : "CNAME",
-      name : "sig1._domainkey",
-      value : "sig1.dkim.visionir.io.at.icloudmailadmin.com.",
-      ttl : 3600
-    }
-    ,
+    # { type : "TXT",
+    #   name : "@",
+    #   value : "apple-domain=3mM0Q7ibDG1aA7rn",
+    #   ttl : 3600
+    # }
+    # ,
+    # { type : "TXT",
+    #   name : "@",
+    #   value : "v=spf1 include:icloud.com ~all",
+    #   ttl : 3600
+    # }
+    # ,
+    # { type : "MX",
+    #   name : "@",
+    #   value : "mx01.mail.icloud.com.",
+    #   ttl : 3600
+    #   priority : 10
+    # }
+    # ,
+    # { type : "MX",
+    #   name : "@",
+    #   value : "mx02.mail.icloud.com.",
+    #   ttl : 3600
+    #   priority : 10
+    # }
+    # ,
+    # { type : "CNAME",
+    #   name : "sig1._domainkey",
+    #   value : "sig1.dkim.visionir.io.at.icloudmailadmin.com.",
+    #   ttl : 3600
+    # }
+    # ,
     #discord_records
     { type : "TXT",
       name : "_discord.visionir.io",

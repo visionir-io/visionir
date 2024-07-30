@@ -1,0 +1,64 @@
+- name: "Set up Git and Github"
+  hosts: oci
+
+  vars:
+    repo_address: "{{ lookup('env', 'GH_REPO_ADDRESS') }}"
+    local_repo: /opt/visionir
+    git_user: "{{ lookup('env', 'GIT_USER') }}"
+    git_email: "{{ lookup('env', 'GIT_EMAIL') }}"
+    github_pat: "{{ lookup('env', 'GH_MASTER_TOKEN') }}"
+    git_config:
+      user.name: "{{ git_user }}"
+      user.email: "{{ git_email }}"
+      gpg.program: gpg
+      commit.gpgsign: true
+      credential.https://github.com.helper: "!/usr/bin/gh auth git-credential"
+      safe.directory: "{{ local_repo }}"
+
+  tasks:
+    - name: Get the GPG key ID
+      ansible.builtin.shell: |
+        gpg --list-keys --with-colons {{ git_user }} | awk -F: '/^pub/ {print $5}'
+      register: gpg_key_id
+
+    - name: Print the GPG key ID
+      ansible.builtin.debug:
+        msg: "GPG key ID: {{ gpg_key_id.stdout }}"
+
+    - name: Configure Git user and email
+      ansible.builtin.git_config:
+        scope: global
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+      loop: "{{ git_config | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+
+    - name: Configure Git GPG signing key
+      ansible.builtin.git_config:
+        scope: global
+        name: user.signingkey
+        value: "{{ gpg_key_id.stdout }}"
+
+    - name: Clone the repository
+      ansible.builtin.git:
+        repo: "{{ repo_address }}"
+        dest: "{{ local_repo }}"
+        version: master
+        force: yes
+      become: yes
+      args:
+      ignore_errors: yes
+      failed_when: false
+
+    - name: set .mygitignore in local git config
+      ansible.builtin.git_config:
+        scope: local
+        name: core.excludesfile
+        value: ".mygitignore"
+
+    - name: Authenticate GitHub CLI
+      shell: |
+        echo $GITHUB_PAT | gh auth login --with-token
+      environment:
+        GITHUB_PAT: "{{ github_pat }}"

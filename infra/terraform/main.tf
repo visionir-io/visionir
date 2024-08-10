@@ -30,6 +30,10 @@ terraform {
       source  = "integrations/github"
       version = "6.2.2"
     }
+    acme = {
+      source  = "vancluever/acme"
+      version = "2.25.0"
+    }
   }
 }
 provider "cloudflare" {
@@ -53,4 +57,8 @@ provider "sendgrid" {
 
 provider "github" {
   token = var.github_token
+}
+
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }

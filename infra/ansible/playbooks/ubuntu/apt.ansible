@@ -19,6 +19,7 @@
           - git
           - gh
           - gnupg
+          - pipx
         state: latest
     - name: reboot
       ansible.builtin.reboot:

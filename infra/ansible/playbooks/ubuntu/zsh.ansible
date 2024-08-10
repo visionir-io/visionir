@@ -22,6 +22,8 @@
       plugins=(
               git
               minikube
+              kubernetes
+              helm
               terraform
               zsh-syntax-highlighting
               zsh-autosuggestions

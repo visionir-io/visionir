@@ -33,3 +33,12 @@ resource "local_file" "ansible_inventory" {
   EOF
   depends_on = [oci_core_instance.visionir]
 }
+
+resource "local_file" "cloudflare_cert" {
+  filename = "${var.home_absolute_path}/.cloudflare/cert.pem"
+  lifecycle {
+    create_before_destroy = true
+  }
+  content    = cloudflare_origin_ca_certificate.visionir_io.certificate
+  depends_on = [cloudflare_origin_ca_certificate.visionir_io]
+}

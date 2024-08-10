@@ -21,6 +21,7 @@
           - ca-certificates
           - curl
         state: present
+
     - name: Create directory for Docker keyring
       ansible.builtin.file:
         path: /etc/apt/keyrings
@@ -44,6 +45,7 @@
     - name: Update the package list after adding Docker repository
       ansible.builtin.apt:
         update_cache: yes
+
     - name: Install Docker packages
       ansible.builtin.apt:
         name:

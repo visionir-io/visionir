@@ -94,6 +94,27 @@ resource "cloudflare_zone_dnssec" "visionir_io" {
   }
 }
 
+resource "tls_private_key" "cert_private_key" {
+  algorithm = "RSA"
+}
+
+resource "tls_cert_request" "req" {
+  private_key_pem = tls_private_key.cert_private_key.private_key_pem
+  dns_names       = ["*.${var.visionir_domain}", "${var.visionir_domain}"]
+
+  subject {
+    common_name = "*.${var.visionir_domain}"
+  }
+}
+
+resource "cloudflare_origin_ca_certificate" "visionir_io" {
+  csr                = tls_cert_request.req.cert_request_pem
+  hostnames          = tls_cert_request.req.dns_names
+  request_type       = "origin-rsa"
+  requested_validity = 5475
+  depends_on         = [tls_cert_request.req]
+}
+
 resource "cloudflare_record" "root_domain" {
   zone_id         = cloudflare_zone.visionir_io.id
   allow_overwrite = true
@@ -128,4 +149,8 @@ output "visionir_io_nameservers" {
 output "zone_id" {
   value     = cloudflare_zone.visionir_io.id
   sensitive = true
+}
+
+output "ca_cert" {
+  value = cloudflare_origin_ca_certificate.visionir_io.certificate
 }

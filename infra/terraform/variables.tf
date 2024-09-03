@@ -24,11 +24,6 @@ variable "cloudflare_api_token" {
   type        = string
 }
 
-variable "cloudflare_account_id" {
-  description = "The account ID for Cloudflare"
-  type        = string
-}
-
 variable "oci_tenancy_id" {
   description = "The OCID of the tenancy"
   type        = string

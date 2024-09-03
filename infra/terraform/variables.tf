@@ -36,7 +36,7 @@ variable "oci_tenancy_id" {
 variable "oci_maximum_storage_size" {
   description = "The maximum storage size for the volume"
   type        = number
-  default     = 200
+  default     = 150
 }
 
 variable "config_file_profile" {

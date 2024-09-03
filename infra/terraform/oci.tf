@@ -119,6 +119,30 @@ resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_htt
   }
 }
 
+resource "oci_objectstorage_bucket" "visionir" {
+  compartment_id = var.oci_tenancy_id
+  name           = "Visionir.iO"
+  namespace      = "ax1gw6nynswi"
+  auto_tiering   = "InfrequentAccess"
+}
+
+resource "oci_core_volume" "visionir" {
+  compartment_id      = var.oci_tenancy_id
+  availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
+  display_name        = "visionir_volume"
+  size_in_gbs         = var.oci_maximum_storage_size
+
+}
+
+resource "oci_core_volume_attachment" "visionir" {
+  display_name    = "visionir_volume_attachment"
+  attachment_type = "iscsi"
+  instance_id     = oci_core_instance.visionir.id
+  volume_id       = oci_core_volume.visionir.id
+  depends_on      = [oci_core_instance.visionir, oci_core_volume.visionir]
+}
+
+
 resource "oci_core_instance" "visionir" {
   display_name        = "visionir"
   availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
@@ -127,31 +151,25 @@ resource "oci_core_instance" "visionir" {
   metadata = {
     "ssh_authorized_keys" = var.oci_ssh_key
   }
-
+  preserve_boot_volume = false
   create_vnic_details {
     assign_public_ip          = true
     assign_private_dns_record = true
     nsg_ids                   = [oci_core_network_security_group.visionir.id]
     subnet_id                 = oci_core_subnet.visionir.id
+    hostname_label            = "visionir"
   }
 
   source_details {
-    source_type = "image"
-    source_id   = var.oci_ubuntu_image_id
+    source_type                     = "image"
+    source_id                       = var.oci_ubuntu_image_id
+    is_preserve_boot_volume_enabled = false
+    boot_volume_size_in_gbs         = 50
   }
 
   shape_config {
     ocpus         = 4
     memory_in_gbs = 24
-  }
-  launch_volume_attachments {
-    type = "iscsi"
-    launch_create_volume_details {
-      size_in_gbs          = 50
-      volume_creation_type = "ATTRIBUTES"
-      compartment_id       = var.oci_tenancy_id
-
-    }
   }
 }
 

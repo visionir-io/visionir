@@ -134,15 +134,13 @@ resource "oci_core_volume" "visionir" {
 
 }
 
-resource "oci_core_volume_attachment" "visionir" {
+resource "oci_core_volume_attachment" "visionir_volume" {
   display_name    = "visionir_volume_attachment"
   attachment_type = "iscsi"
   instance_id     = oci_core_instance.visionir.id
   volume_id       = oci_core_volume.visionir.id
   depends_on      = [oci_core_instance.visionir, oci_core_volume.visionir]
 }
-
-
 resource "oci_core_instance" "visionir" {
   display_name        = "visionir"
   availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name

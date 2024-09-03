@@ -54,8 +54,10 @@
     - name: set .mygitignore in local git config
       ansible.builtin.git_config:
         scope: local
+        repo: "{{ local_repo }}"
         name: core.excludesfile
         value: ".mygitignore"
+      become: yes
 
     - name: Authenticate GitHub CLI
       shell: |

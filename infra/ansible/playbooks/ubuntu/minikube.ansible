@@ -8,25 +8,26 @@
         deb: https://storage.googleapis.com/minikube/releases/latest/minikube_latest_arm64.deb
         state: present
       become: yes
+
     - name: Get latest kubectl version
-      uri:
+      ansible.builtin.uri:
         url: https://dl.k8s.io/release/stable.txt
         return_content: yes
       register: version
 
     - name: Download the latest kubectl release
-      uri:
+      ansible.builtin.uri:
         url: https://dl.k8s.io/release/{{ version.content }}/bin/linux/arm/kubectl
         dest: /home/{{ ansible_user }}
       register: kubectl
 
     - name: Download the kubectl checksum file
-      uri:
+      ansible.builtin.uri:
         url: https://dl.k8s.io/{{ version.content }}/bin/linux/arm/kubectl.sha256
         dest: /home/{{ ansible_user }}
 
     - name: Validate the kubectl binary against the checksum file
-      shell: echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+      ansible.builtin.shell: echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
       register: result
 
     - name: Assert that the kubectl binary is OK

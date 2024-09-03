@@ -4,7 +4,7 @@
   become: yes
   tasks:
     - name: Ensure necessary dependencies are installed
-      apt:
+      ansible.builtin.apt:
         name:
           - apt-transport-https
           - ca-certificates
@@ -14,21 +14,21 @@
         update_cache: yes
 
     - name: Download Helm GPG key
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://baltocdn.com/helm/signing.asc
         state: present
 
     - name: Add Helm repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
         state: present
 
     - name: Update apt cache
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
 
     - name: Install Helm
-      apt:
+      ansible.builtin.apt:
         name: helm
         state: present
 

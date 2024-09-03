@@ -22,11 +22,12 @@
       plugins=(
               git
               minikube
-              kubernetes
+              kubectl
               helm
               terraform
               zsh-syntax-highlighting
               zsh-autosuggestions
+              vagrant
               )
       source $ZSH/oh-my-zsh.sh
   tasks:

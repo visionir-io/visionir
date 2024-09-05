@@ -64,3 +64,12 @@
         echo $GITHUB_PAT | gh auth login --with-token
       environment:
         GITHUB_PAT: "{{ github_pat }}"
+
+    # change ownership of the local repo to the user
+    - name: Change ownership of the local repo
+      ansible.builtin.file:
+        path: "{{ local_repo }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: yes
+      become: yes

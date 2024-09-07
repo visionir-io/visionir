@@ -1,0 +1,29 @@
+---
+- name: Enable UFW and Reboot
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+        update_cache: yes
+
+    - name: Set UFW default policy to allow all incoming traffic
+      ansible.builtin.ufw:
+        default: allow
+        direction: incoming
+
+    - name: Set UFW default policy to allow all outgoing traffic
+      ufw:
+        default: allow
+        direction: outgoing
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+    - name: Reboot the system
+      reboot:
+        msg: "Rebooting to apply UFW changes"
+        reboot_timeout: 60

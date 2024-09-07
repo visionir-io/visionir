@@ -20,6 +20,8 @@
           - gh
           - gnupg
           - pipx
+          - lsof
+          - ufw
         state: latest
     - name: reboot
       ansible.builtin.reboot:

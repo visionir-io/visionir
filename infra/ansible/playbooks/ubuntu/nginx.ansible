@@ -1,0 +1,53 @@
+---
+- name: Install Nginx on Ubuntu
+  hosts: oci
+  become: yes
+  vars:
+    cloudflare_certs_dir: ".cloudflare"
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start Nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Ensure Nginx is running
+      systemd:
+        name: nginx
+        state: started
+
+    - name: Change ownership of the nginx
+      ansible.builtin.file:
+        path: "/etc/nginx"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        recurse: yes
+      become: yes
+
+    - name: Create the ssl directory
+      ansible.builtin.file:
+        path: "/etc/nginx/ssl"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0755
+
+    # copy local certs to the server
+    - name: Copy local certs to the server
+      ansible.builtin.copy:
+        src: "~/{{cloudflare_certs_dir}}/{{ item.cert }}"
+        dest: "/etc/nginx/ssl/{{ item.cert }}"
+      with_items:
+        - { cert: "cert.pem" }
+        - { cert: "cert-key.pem" }
+      become: yes

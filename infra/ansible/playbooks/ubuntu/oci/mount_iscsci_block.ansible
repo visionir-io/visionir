@@ -1,0 +1,53 @@
+---
+- name: Attach and mount iSCSI block storage
+  hosts: oci
+  become: true
+  vars:
+    iqn: "iqn.2015-12.com.oracleiaas:df6d7412-a2c6-4214-b7e8-c1e58700e770"
+    iscsi_ip: "169.254.2.2"
+    iscsi_port: "3260"
+
+  tasks:
+    - name: Ensure iscsi-initiator-utils is installed
+      ansible.builtin.package:
+        name: iscsi-initiator-utils
+        state: present
+
+    - name: Attach iSCSI volume
+      ansible.builtin.shell: |
+        iscsiadm -m node -o new -T {{ iqn }} -p {{ iscsi_ip }}:{{ iscsi_port }}
+        iscsiadm -m node -o update -T {{ iqn }} -p {{ iscsi_ip }}:{{ iscsi_port }}
+        iscsiadm -m node -T {{ iqn }} -p {{ iscsi_ip }}:{{ iscsi_port }} --login
+      args:
+        creates: /dev/disk/by-path/ip-{{ iscsi_ip }}:{{ iscsi_port }}-iscsi-{{ iqn }}-lun-0
+
+    - name: Wait for the disk to become available
+      ansible.builtin.wait_for:
+        path: /dev/disk/by-path/ip-{{ iscsi_ip }}:{{ iscsi_port }}-iscsi-{{ iqn }}-lun-0
+        timeout: 30
+
+    - name: Format the iSCSI disk with ext4 filesystem
+      ansible.builtin.filesystem:
+        fstype: ext4
+        dev: /dev/disk/by-path/ip-{{ iscsi_ip }}:{{ iscsi_port }}-iscsi-{{ iqn }}-lun-0
+
+    - name: Create a mount point
+      ansible.builtin.file:
+        path: /mnt/iscsi_disk
+        state: directory
+
+    - name: Mount the iSCSI disk
+      ansible.builtin.mount:
+        path: /mnt/iscsi_disk
+        src: /dev/disk/by-path/ip-{{ iscsi_ip }}:{{ iscsi_port }}-iscsi-{{ iqn }}-lun-0
+        fstype: ext4
+        opts: defaults
+        state: mounted
+
+    - name: Ensure iSCSI disk is mounted on boot
+      ansible.builtin.mount:
+        path: /mnt/iscsi_disk
+        src: /dev/disk/by-path/ip-{{ iscsi_ip }}:{{ iscsi_port }}-iscsi-{{ iqn }}-lun-0
+        fstype: ext4
+        opts: defaults
+        state: present

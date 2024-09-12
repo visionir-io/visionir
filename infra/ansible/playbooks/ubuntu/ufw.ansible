@@ -1,6 +1,6 @@
 ---
 - name: Enable UFW and Reboot
-  hosts: all
+  hosts: oci
   become: yes
   tasks:
     - name: Install UFW

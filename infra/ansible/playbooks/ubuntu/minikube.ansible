@@ -53,3 +53,47 @@
       shell: kubectl version --client
       register: client
       failed_when: client.rc > 1
+
+    - name: Start Minikube
+      shell: |
+        minikube start \
+        --nodes=3 \
+        --memory=no-limit \
+        --addons=dashboard storage-provisioner metrics-server \
+        --cpus=no-limit
+      register: minikube_start
+
+    - name: Create systemd service file for Minikube tunnel
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/minikube-tunnel.service
+        content: |
+          [Unit]
+          Description=Minikube Tunnel Service
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/bin/minikube tunnel
+          Restart=always
+          User={{ ansible_user }}
+          WorkingDirectory=/home/{{ ansible_user }}
+          StandardOutput=syslog
+          StandardError=syslog
+          SyslogIdentifier=minikube-tunnel
+
+          [Install]
+          WantedBy=multi-user.target
+      args:
+        creates: /etc/systemd/system/minikube-tunnel.service
+      become: yes
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: yes
+      become: yes
+
+    - name: Start and enable minikube tunnel service
+      ansible.builtin.systemd:
+        name: minikube-tunnel
+        enabled: yes
+        state: started
+      become: yes

@@ -7,23 +7,6 @@
     gpg_secret_key_path: .gnupg/gpg-github-secret.asc
 
   tasks:
-    - name: Create GPG key
-      # provide the user name and email address if not copying existing one
-      ansible.builtin.shell: |
-        cat <<EOF | gpg --batch --generate-key
-        %no-protection
-        Key-Type: RSA
-        Key-Length: 4096
-        Subkey-Type: RSA
-        Subkey-Length: 4096
-        Name-Real: {{ git_user }}
-        Name-Email: {{ git_email }}
-        Expire-Date: 0
-        EOF
-      ignore_errors: yes
-      args:
-        creates: /home/{{ansible_user}}/{{ gpg_key_path }}
-
     - name: get gpg key id for the git user
       ansible.builtin.shell: |
         gpg --list-keys --with-colons {{ git_email }} | awk -F: '/^pub/ {print $5}'

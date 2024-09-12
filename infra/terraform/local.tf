@@ -42,3 +42,12 @@ resource "local_file" "cloudflare_cert" {
   content    = cloudflare_origin_ca_certificate.visionir_io.certificate
   depends_on = [cloudflare_origin_ca_certificate.visionir_io]
 }
+
+resource "local_file" "cloudflare_cert_key" {
+  filename = "${var.home_absolute_path}/.cloudflare/cert-key.pem"
+  lifecycle {
+    create_before_destroy = true
+  }
+  content    = tls_private_key.cert_private_key.private_key_pem
+  depends_on = [cloudflare_origin_ca_certificate.visionir_io]
+}

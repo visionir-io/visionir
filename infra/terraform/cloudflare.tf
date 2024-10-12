@@ -36,6 +36,7 @@ resource "cloudflare_zone_dnssec" "visionir_io" {
 
 resource "tls_private_key" "cert_private_key" {
   algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
 resource "tls_cert_request" "req" {
@@ -90,8 +91,4 @@ output "visionir_io_nameservers" {
 output "zone_id" {
   value     = cloudflare_zone.visionir_io.id
   sensitive = true
-}
-
-output "ca_cert" {
-  value = cloudflare_origin_ca_certificate.visionir_io.certificate
 }

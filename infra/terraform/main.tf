@@ -12,7 +12,8 @@ terraform {
       version = "4.33.0"
     }
     oci = {
-      source = "oracle/oci"
+      source  = "oracle/oci"
+      version = "6.13.0"
     }
     aws = {
       source  = "hashicorp/aws"
@@ -22,22 +23,19 @@ terraform {
       source  = "hashicorp/local"
       version = "2.5.1"
     }
-    sendgrid = {
-      source  = "indentinc/sendgrid"
-      version = "1.0.1"
-    }
     github = {
       source  = "integrations/github"
       version = "6.2.2"
-    }
-    acme = {
-      source  = "vancluever/acme"
-      version = "2.25.0"
     }
   }
 }
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "oci" {
+  tenancy_ocid        = var.oci_tenancy_id
+  config_file_profile = var.config_file_profile
 }
 
 provider "aws" {
@@ -46,19 +44,6 @@ provider "aws" {
   secret_key = var.aws_secret_access_key
 }
 
-provider "oci" {
-  tenancy_ocid        = var.oci_tenancy_id
-  config_file_profile = var.config_file_profile
-}
-
-provider "sendgrid" {
-  api_key = var.sendgrid_api_key
-}
-
 provider "github" {
   token = var.github_token
-}
-
-provider "acme" {
-  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }

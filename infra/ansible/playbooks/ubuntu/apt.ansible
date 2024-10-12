@@ -1,6 +1,6 @@
 ---
 - name: Apt update, upgrade and install packages
-  hosts: oci
+  hosts: linux-based
   become: yes
 
   tasks:
@@ -21,7 +21,9 @@
           - gnupg
           - pipx
           - lsof
-          - ufw
+          - dnsutils
+          - tcpdump
+          - iptables
         state: latest
     - name: reboot
       ansible.builtin.reboot:

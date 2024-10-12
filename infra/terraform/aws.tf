@@ -97,17 +97,3 @@ resource "aws_iam_user_policy_attachment" "attach_policy" {
 resource "aws_iam_access_key" "terraform_access_key" {
   user = aws_iam_user.terraform_user.name
 }
-
-# Outputs for Access Key and Secret Key (be cautious with secrets management)
-output "access_key_id" {
-  value = aws_iam_access_key.terraform_access_key.id
-}
-
-output "secret_access_key" {
-  value     = aws_iam_access_key.terraform_access_key.secret
-  sensitive = true
-}
-
-output "dynamodb_resource_arn" {
-  value = aws_dynamodb_table.terraform_locks.arn
-}

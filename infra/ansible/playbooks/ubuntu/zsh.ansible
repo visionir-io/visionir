@@ -1,6 +1,6 @@
 ---
 - name: Zsh and Oh-My-Zsh setup
-  hosts: oci
+  hosts: linux-based
 
   vars:
     files_to_create:
@@ -61,7 +61,7 @@
 
     - name: Install Oh My Zsh
       ansible.builtin.git:
-        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        repo: https://github.com/ohmyzsh/ohmyzsh
         dest: ~/.oh-my-zsh
         depth: 1
 

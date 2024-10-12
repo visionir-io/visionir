@@ -1,0 +1,15 @@
+---
+- name: Copy cloudflare certs to the server
+  hosts: oci
+  become: yes
+  vars:
+    cloudflare_certs_dir: ".cloudflare"
+  tasks:
+    - name: Copy local certs to the server
+      ansible.builtin.copy:
+        src: "~/{{cloudflare_certs_dir}}/{{ item.cert }}"
+        dest: "/home/ubuntu/visionir/{{ item.cert }}"
+      with_items:
+        - { cert: "cert.pem" }
+        - { cert: "cert-key.pem" }
+      become: yes

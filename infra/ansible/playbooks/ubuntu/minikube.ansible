@@ -59,7 +59,7 @@
         minikube start \
         --nodes=3 \
         --memory=no-limit \
-        --addons=dashboard storage-provisioner metrics-server \
+        --addons=dashboard storage-provisioner metrics-server csi-hostpath-driver\
         --cpus=no-limit
       register: minikube_start
 
@@ -83,7 +83,7 @@
           [Install]
           WantedBy=multi-user.target
       args:
-        creates: /etc/systemd/system/minikube-tunnel.service
+        dest: /etc/systemd/system/minikube-tunnel.service
       become: yes
 
     - name: Reload systemd daemon

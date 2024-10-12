@@ -6,10 +6,11 @@ resource "oci_core_vcn" "visionir" {
   compartment_id = var.oci_tenancy_id
   dns_label      = "vsnirvcn"
   display_name   = "visionir_vcn"
+  cidr_block     = "10.0.254.0/24"
 }
 
 resource "oci_core_subnet" "visionir" {
-  cidr_block     = "10.0.0.0/24"
+  cidr_block     = oci_core_vcn.visionir.cidr_block
   compartment_id = var.oci_tenancy_id
   vcn_id         = oci_core_vcn.visionir.id
   route_table_id = oci_core_route_table.visionir.id
@@ -83,6 +84,26 @@ resource "oci_core_network_security_group_security_rule" "outbound_http" {
     }
   }
 }
+resource "oci_core_network_security_group_security_rule" "outbound_wireguard" {
+  lifecycle {
+    ignore_changes = [
+      source_type,
+    ]
+  }
+  description               = "Allow connection to wireguard server"
+  network_security_group_id = oci_core_network_security_group.visionir.id
+  direction                 = "EGRESS"
+  protocol                  = "6"
+  destination               = "85.130.224.219/32"
+  stateless                 = false
+  source_type               = "CIDR_BLOCK"
+  tcp_options {
+    destination_port_range {
+      min = 51820
+      max = 51820
+    }
+  }
+}
 
 resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_http" {
   description               = "Allow HTTP traffic from Cloudflare"
@@ -122,7 +143,7 @@ resource "oci_core_network_security_group_security_rule" "inbound_cloudflare_htt
 resource "oci_objectstorage_bucket" "visionir" {
   compartment_id = var.oci_tenancy_id
   name           = "Visionir.iO"
-  namespace      = "ax1gw6nynswi"
+  namespace      = var.oci_namespace
   auto_tiering   = "InfrequentAccess"
 }
 
@@ -141,13 +162,19 @@ resource "oci_core_volume_attachment" "visionir_volume" {
   volume_id       = oci_core_volume.visionir.id
   depends_on      = [oci_core_instance.visionir, oci_core_volume.visionir]
 }
+
+resource "tls_private_key" "oci_machine" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+
+}
 resource "oci_core_instance" "visionir" {
   display_name        = "visionir"
   availability_domain = data.oci_identity_availability_domains.availability_domains.availability_domains[0].name
   compartment_id      = var.oci_tenancy_id
   shape               = "VM.Standard.A1.Flex"
   metadata = {
-    "ssh_authorized_keys" = var.oci_ssh_key
+    "ssh_authorized_keys" = tls_private_key.oci_machine.public_key_openssh
   }
   preserve_boot_volume = false
   create_vnic_details {
@@ -169,6 +196,7 @@ resource "oci_core_instance" "visionir" {
     ocpus         = 4
     memory_in_gbs = 24
   }
+  depends_on = [tls_private_key.oci_machine, local_file.oci_machine_key]
 }
 
 output "compute-ip-address" {

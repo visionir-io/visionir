@@ -1,6 +1,6 @@
 ---
 - name: Setup Docker on Ubuntu
-  hosts: oci
+  hosts: linux-based
   become: yes
 
   tasks:

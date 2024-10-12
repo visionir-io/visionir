@@ -25,6 +25,7 @@ variable "cloudflare_api_token" {
 }
 
 variable "oci_tenancy_id" {
+  # compartment_id
   description = "The OCID of the tenancy"
   type        = string
 }
@@ -35,24 +36,20 @@ variable "oci_maximum_storage_size" {
 }
 
 variable "config_file_profile" {
+  # seems not to be used
   description = "The profile name in the OCI config file"
   type        = string
+}
+
+variable "oci_namespace" {
+  description = "The namespace for the OCI"
+  type        = string
+
 }
 
 variable "oci_ubuntu_image_id" {
   description = "The OCID of the Ubuntu image"
   type        = string
-}
-
-variable "oci_ssh_key" {
-  description = "The SSH public key"
-  type        = string
-
-}
-variable "oci_ssh_key_path" {
-  description = "The SSH public key path"
-  type        = string
-
 }
 
 variable "visionir_domain" {
@@ -69,11 +66,6 @@ variable "home_absolute_path" {
   description = "Absolute path to the home directory"
   type        = string
 
-}
-
-variable "sendgrid_api_key" {
-  description = "The API key for Sendgrid"
-  type        = string
 }
 
 variable "github_token" {

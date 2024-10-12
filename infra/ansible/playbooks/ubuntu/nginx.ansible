@@ -41,13 +41,3 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: 0755
-
-    # copy local certs to the server
-    - name: Copy local certs to the server
-      ansible.builtin.copy:
-        src: "~/{{cloudflare_certs_dir}}/{{ item.cert }}"
-        dest: "/etc/nginx/ssl/{{ item.cert }}"
-      with_items:
-        - { cert: "cert.pem" }
-        - { cert: "cert-key.pem" }
-      become: yes

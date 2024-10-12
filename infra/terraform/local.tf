@@ -71,11 +71,21 @@ resource "local_file" "cloudflare_cert_key" {
 
 resource "local_file" "oci_machine_key" {
   filename        = "${var.home_absolute_path}/.ssh/oci.key"
-  file_permission = 0600
+  file_permission = 0700
   lifecycle {
     create_before_destroy = true
   }
   content    = tls_private_key.oci_machine.private_key_pem
+  depends_on = [cloudflare_origin_ca_certificate.visionir_io]
+}
+
+resource "local_file" "oci_machine_pub" {
+  filename        = "${var.home_absolute_path}/.ssh/oci.pub"
+  file_permission = 0700
+  lifecycle {
+    create_before_destroy = true
+  }
+  content    = tls_private_key.oci_machine.public_key_openssh
   depends_on = [cloudflare_origin_ca_certificate.visionir_io]
 }
 
@@ -86,10 +96,22 @@ resource "tls_private_key" "network_admin" {
 }
 
 resource "local_file" "network_admin_key" {
-  filename = "${var.home_absolute_path}/.ssh/network_admin.key"
+  filename        = "${var.home_absolute_path}/.ssh/network_admin.key"
+  file_permission = 0700
   lifecycle {
     create_before_destroy = true
   }
   content    = tls_private_key.network_admin.private_key_pem
   depends_on = [cloudflare_origin_ca_certificate.visionir_io]
+}
+
+resource "local_file" "network_admin_pub" {
+  filename        = "${var.home_absolute_path}/.ssh/network_admin.pub"
+  file_permission = 0700
+  lifecycle {
+    create_before_destroy = true
+  }
+  content    = tls_private_key.network_admin.public_key_openssh
+  depends_on = [cloudflare_origin_ca_certificate.visionir_io]
+
 }

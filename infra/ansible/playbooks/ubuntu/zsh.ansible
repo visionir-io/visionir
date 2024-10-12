@@ -41,9 +41,9 @@
       eval "$(direnv hook zsh)"
 
       export PATH="$PATH:/Users/nira/.local/bin"
-      export PROMPT='%F{63}%n%f@%F{63}%m%f:%F{14}%2~ %F{yellow}->%f '
-      export RPROMPT='%F{green}%D %T%f %F{red}(${vcs_info_msg_0_})%f'
-      # export RPROMPT='%F{green}%D %T%f %F{red}(${vcs_info_msg_0_})%f %F{190}%f$(kubectx -c)'
+      export PROMPT='%F{051}%n%f@%F{069}%m%f:%F{14}%2~ %F{yellow}->%f '
+      export RPROMPT='%F{214}%D %T%f %F{red}(${vcs_info_msg_0_})%f'
+      # export RPROMPT='%F{214}%D %T%f %F{red}(${vcs_info_msg_0_})%f %F{190}%f$(kubectx -c)'
   tasks:
     - name: Change default shell to Zsh for the current user
       user:

@@ -73,8 +73,8 @@ resource "cloudflare_record" "subdomain" {
   zone_id         = cloudflare_zone.visionir_io.id
   allow_overwrite = true
   name            = "*"
-  value           = oci_core_instance.visionir.public_ip
-  type            = "A"
+  value           = cloudflare_record.root_domain.name
+  type            = "CNAME"
   ttl             = 1
   proxied         = true
   depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]

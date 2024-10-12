@@ -24,6 +24,8 @@
           - dnsutils
           - tcpdump
           - iptables
+          - tmux
+          - direnv
         state: latest
     - name: reboot
       ansible.builtin.reboot:

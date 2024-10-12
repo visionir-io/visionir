@@ -10,26 +10,40 @@
       - /home/{{ansible_user}}/.zlogin
 
     zshrc_content: |
+      export GPG_TTY=$(tty)
       export LANG=en_US.utf
-      export ZSH_THEME=bira
       export ZSH=~/.oh-my-zsh
+      export ZSH_THEME=bira
 
       fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
+      #adjust git prompt
       autoload -Uz vcs_info && precmd_vcs_info() { vcs_info } && precmd_functions+=( precmd_vcs_info ) && \
       setopt prompt_subst && zstyle ':vcs_info:git:*' formats '%b'
 
+      #zsh plugins
       plugins=(
-              git
-              minikube
               kubectl
-              helm
+              git
+              dotenv
+              macos
+              rake
+              docker
+              tmux
               terraform
+              compleat
               zsh-syntax-highlighting
               zsh-autosuggestions
-              vagrant
               )
+
+      #direnv
       source $ZSH/oh-my-zsh.sh
+      eval "$(direnv hook zsh)"
+
+      export PATH="$PATH:/Users/nira/.local/bin"
+      export PROMPT='%F{63}%n%f@%F{63}%m%f:%F{14}%2~ %F{yellow}->%f '
+      export RPROMPT='%F{green}%D %T%f %F{red}(${vcs_info_msg_0_})%f'
+      # export RPROMPT='%F{green}%D %T%f %F{red}(${vcs_info_msg_0_})%f %F{190}%f$(kubectx -c)'
   tasks:
     - name: Change default shell to Zsh for the current user
       user:

@@ -1,15 +1,19 @@
 ---
 - name: Copy cloudflare certs to the server
-  hosts: oci
-  become: yes
+  hosts: linux-based
   vars:
     cloudflare_certs_dir: ".cloudflare"
   tasks:
+    - name: Ensure Cloudflare directory exists in the user's home directory
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/{{ cloudflare_certs_dir }}"
+        state: directory
+        mode: "0755"
+
     - name: Copy local certs to the server
       ansible.builtin.copy:
         src: "~/{{cloudflare_certs_dir}}/{{ item.cert }}"
-        dest: "/home/ubuntu/visionir/{{ item.cert }}"
+        dest: "{{ansible_user_dir}}/{{cloudflare_certs_dir}}/{{ item.cert }}"
       with_items:
-        - { cert: "cert.pem" }
-        - { cert: "cert-key.pem" }
-      become: yes
+        - { cert: "cert.key" }
+        - { cert: "cert.pub" }

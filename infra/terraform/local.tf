@@ -9,6 +9,7 @@ resource "local_file" "ssh_config" {
     User ubuntu
     Port 22
     IdentityFile ${local_file.oci_machine_key.filename}
+    ForwardX11 yes
     AddKeysToAgent yes
     UseKeychain yes
     ServerAliveInterval 240
@@ -18,6 +19,7 @@ resource "local_file" "ssh_config" {
     User nir
     Port 22
     IdentityFile ${local_file.network_admin_key.filename}
+    ForwardX11 yes
     AddKeysToAgent yes
     UseKeychain yes
     ServerAliveInterval 240
@@ -52,7 +54,7 @@ resource "local_file" "ansible_inventory" {
 }
 
 resource "local_file" "cloudflare_cert" {
-  filename = "${var.home_absolute_path}/.cloudflare/cert.pub"
+  filename = "${var.home_absolute_path}/.cloudflare/cert.pem"
   lifecycle {
     create_before_destroy = true
   }

@@ -69,7 +69,7 @@ resource "cloudflare_record" "root_domain" {
     prevent_destroy = true
   }
 }
-resource "cloudflare_record" "subdomain" {
+resource "cloudflare_record" "subdomains" {
   zone_id         = cloudflare_zone.visionir_io.id
   allow_overwrite = true
   name            = "*"
@@ -80,8 +80,10 @@ resource "cloudflare_record" "subdomain" {
   depends_on      = [oci_core_instance.visionir, cloudflare_zone.visionir_io]
   lifecycle {
     prevent_destroy = true
+    ignore_changes  = [value]
   }
 }
+
 
 output "visionir_io_nameservers" {
   value     = cloudflare_zone.visionir_io.name_servers
